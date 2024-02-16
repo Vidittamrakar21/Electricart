@@ -5,7 +5,7 @@
     right: 0;
     bottom: 0;
     background-color: rgba(8, 8, 8, 0.563);
-    z-index: 25;
+    z-index: 39;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,7 +16,7 @@
 .sign{
     height: 500px;
     width: 400px;
-    z-index: 28;
+    z-index: 40;
     background-color: white;
     border-radius: 10px;
     display: flex;

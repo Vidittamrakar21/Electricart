@@ -24,8 +24,8 @@ export default function RootLayout({
       <body className={inter.className}>
       
         {children}
+           {/* <Signpage></Signpage> */}
             <Navbar></Navbar>
-           <Signpage></Signpage>
 
             <Footer></Footer>
         
