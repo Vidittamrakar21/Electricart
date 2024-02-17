@@ -11,6 +11,7 @@ export default function Navbar (){
 
   const openlog = ()=>{
    data?.openlog(true)
+   console.log("working...")
    
   } 
 

@@ -5,6 +5,7 @@ import Corousel from "./corousel"
 import Container from "./container"
 import Footer from "./footer"
 import Signpage from "./sign/sign"
+import { Ecoprovider } from "@/context/contextapi"
 
 export default function Front (){
     return(
