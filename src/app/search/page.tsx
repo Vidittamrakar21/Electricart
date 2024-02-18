@@ -3,6 +3,7 @@
 import Footer from "../components/footer"
 import {useRouter} from 'next/navigation'
 import Itemcard from "../components/itemcard"
+import Filter from "../components/filter"
 
 export default function Search (){
 
@@ -26,11 +27,44 @@ export default function Search (){
 
         </nav>
 
+        
+
         {/* <h1 className="text-[19px]">Search Results will appear here.</h1> */}
 
-        <Itemcard></Itemcard>
+        
 
-        {/* <Footer/> */}
+        <div className="flex flex-row justify-center items-start min-h-[1200px] w-[100%] relative top-[100px]">
+            <Filter></Filter>
+            <div className=" flex flex-row justify-start items-center min-h-[900px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+            <Itemcard></Itemcard>
+          
+           
+            </div>
+        </div>
+
         </div>
     )
 }
