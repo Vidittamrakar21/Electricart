@@ -2,6 +2,7 @@
 
 import Footer from "../components/footer"
 import {useRouter} from 'next/navigation'
+import Itemcard from "../components/itemcard"
 
 export default function Search (){
 
@@ -25,7 +26,9 @@ export default function Search (){
 
         </nav>
 
-        <h1 className="text-[19px]">Search Results will appear here.</h1>
+        {/* <h1 className="text-[19px]">Search Results will appear here.</h1> */}
+
+        <Itemcard></Itemcard>
 
         {/* <Footer/> */}
         </div>
