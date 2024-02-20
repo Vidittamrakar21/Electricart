@@ -1,9 +1,20 @@
+import { set } from "firebase/database";
 import { EventHandler, useState } from "react"
 
 export default function Filter () {
 
     const [range, setrange] = useState(400)
     const [filter, openfilter] = useState(false)
+    const [check1, setcheck1] = useState(false);
+    const [check2, setcheck2] = useState(false);
+    const [check3, setcheck3] = useState(false);
+    const [check4, setcheck4] = useState(false);
+    const [check5, setcheck5] = useState(false);
+    const [check6, setcheck6] = useState(false);
+    const [check7, setcheck7] = useState(false);
+    const [check8, setcheck8] = useState(false);
+    const [check9, setcheck9] = useState(false);
+    const [check10, setcheck10] = useState(false);
 
     const handlerange = (e: any) =>{
         //@ts-ignore
@@ -17,6 +28,27 @@ export default function Filter () {
         openfilter(!filter)
     }
 
+   const [filters ,setfilters] = useState([])
+
+    const addfilters = (x: string) =>{
+        //@ts-ignore
+        setfilters(filters.concat(x))
+    }
+
+
+    const clearallfilters = () => {
+        setfilters([])
+        setcheck1(false)
+        setcheck2(false)
+        setcheck3(false)
+        setcheck4(false)
+        setcheck5(false)
+        setcheck6(false)
+        setcheck7(false)
+        setcheck8(false)
+        setcheck9(false)
+        setcheck10(false)
+    }
 
   return(
       <>
@@ -29,19 +61,20 @@ export default function Filter () {
               <div  className="min-h-[500px] w-[280px] bg-[white] absolute left-[30px] cursor-pointer select-none flex flex-col items-start justify-center sm1:left-0 sm1:mb-3 sm1:z-19 sm1:fixed" >
         <h1 className="ml-4 text-[18px] font-[500] mt-2">Filters</h1>
         <div className="ml-4 min-h-[50px] w-[270px] flex flex-row flex-wrap mt-2">
-            <div className="h-[35px] min-w-[90px] max-w-[200px] text-[black] text-[13px] p-2 bg-[#a3a3a3d5] rounded-[4px] flex justify-center items-center ">
-                    <div>
-                        x
-                    </div>
-                    <div className="ml-3">
-                      min-&#8377;98,000
-
-                    </div>
-            </div>
+           {filters.map((item,index)=>(
+             <div className="h-[35px] min-w-[90px] max-w-[200px] text-[black] text-[13px] p-2 bg-[#a3a3a3d5] rounded-[4px] flex justify-center items-center mt-2 ml-1">
+             <div>
+                 x
+             </div>
+             <div className="ml-3">
+               {item}
+             </div>
+           </div>
+           ))}
 
         </div>
 
-        <h1 className="ml-4">Price</h1>
+        <h1 className="ml-4 mt-2">Price</h1>
         <input type="range" onChange={handlerange} className="ml-4"  />
 
         <div className="h-[35] border ml-4 mt-2 border-[#9b9a9a] w-[90] flex items-center justify-center">
@@ -51,19 +84,19 @@ export default function Filter () {
         <h1 className="mt-2 ml-4">Customer Ratings</h1>
         <div className="h-[200px]  w-[270px] flex flex-col justify-center items-center">
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check1?addfilters('4★ & above'):""; setcheck1(!check1);}} checked={check1}/>
                     <h3 className="ml-2">4&#9733; & above</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check2?addfilters('3★ & above'):""; setcheck2(!check2);}} checked={check2}/>
                     <h3 className="ml-2">3&#9733; & above</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check3?addfilters('2★ & above'):""; setcheck3(!check3);}} checked={check3}/>
                     <h3 className="ml-2">2&#9733; & above</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check4?addfilters('1★ & above'):""; setcheck4(!check4);}} checked={check4}/>
                     <h3 className="ml-2">1&#9733; & above</h3>
                 </div>
         </div>
@@ -72,19 +105,19 @@ export default function Filter () {
         <h1 className="mt-2 ml-4">Brands</h1>
         <div className="min-h-[50px]  w-[270px] flex flex-col justify-center items-center">
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check5?addfilters('Apple'):""; setcheck5(!check5);}}  checked={check5}/>
                     <h3 className="ml-2">Apple</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check6?addfilters('Asus'):""; setcheck6(!check6);}} checked={check6}/>
                     <h3 className="ml-2">Asus</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check7?addfilters('Hp'):""; setcheck7(!check7);}} checked={check7}/>
                     <h3 className="ml-2">Hp</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check8?addfilters('Lenevo'):""; setcheck8(!check8);}} checked={check8}/>
                     <h3 className="ml-2">Lenovo</h3>
                 </div>
         </div>
@@ -92,17 +125,17 @@ export default function Filter () {
         <h1 className="mt-2 ml-4">Offers</h1>
         <div className="min-h-[50px] ml-4 w-[270px] flex flex-col justify-center items-center">
                 <div className="h-[40px] w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check9?addfilters('No Cost EMI'):""; setcheck9(!check9);}} checked={check9}/>
                     <h3 className="ml-2">No Cost EMI</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" />
+                    <input type="checkbox" onClick={()=>{!check10?addfilters('Special Price'):""; setcheck10(!check10);}} checked={check10}/>
                     <h3 className="ml-2">Special Price</h3>
                 </div>
             
         </div>
 
-        <button className="h-[35px] w-[120px] mt-2 ml-2 mb-3 border border-[gray]">CLear All</button>
+        <button className="h-[35px] w-[120px] mt-2 ml-2 mb-3 border border-[gray]" onClick={clearallfilters}>CLear All</button>
 
     </div>
         </div>
