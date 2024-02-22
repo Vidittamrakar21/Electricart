@@ -24,7 +24,10 @@ export default function Filter () {
         // console.log("value" ,result)
         setprice(result)
         setrange(e.target.value)
+        
+        setTimeout(()=>{addfilters(`min - ${price + 10}`)}, 1500)
     }
+
 
     const handlefilter = () =>  {
         openfilter(!filter)
@@ -42,8 +45,11 @@ export default function Filter () {
     }
 
     const removefilter = (x: number, y:string)=> {
+   
+          filters.splice(x,1);
+           setfilters(filters)
        
-      filters.splice(x,1)
+
       if(y === '4★ & above'){
             setcheck1(false)
       }
@@ -74,8 +80,15 @@ export default function Filter () {
             setcheck9(false)
       }
 
-      else if (y === 'Special Price')
-            setcheck10(false)
+      else if (y === 'Special Price'){
+
+          setcheck10(false)
+      }
+
+      else{
+        setrange(0)
+        setprice(500)
+      }
     }
 
     const clearallfilters = () => {
@@ -126,7 +139,7 @@ export default function Filter () {
         </div>
 
         <h1 className="ml-4 mt-2">Price</h1>
-        <input type="range" onChange={handlerange} className="ml-4" value={range} />
+        <input type="range" onChange={ handlerange}  className="ml-4" value={range} />
 
         <div className="h-[35] border ml-4 mt-2 border-[#9b9a9a] w-[90] flex items-center justify-center">
             {price}
@@ -135,19 +148,19 @@ export default function Filter () {
         <h1 className="mt-2 ml-4">Customer Ratings</h1>
         <div className="h-[200px]  w-[270px] flex flex-col justify-center items-center">
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" onClick={()=>{!check1?addfilters('4★ & above'):""; setcheck1(!check1);}} checked={check1}/>
+                    <input type="checkbox" onClick={()=>{!check1?addfilters('4★ & above'):""; setcheck1(true);}} checked={check1}/>
                     <h3 className="ml-2">4&#9733; & above</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check2?addfilters('3★ & above'):""; setcheck2(!check2);}} checked={check2}/>
+                    <input type="checkbox" onClick={()=>{!check2?addfilters('3★ & above'):""; setcheck2(true);}} checked={check2}/>
                     <h3 className="ml-2">3&#9733; & above</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check3?addfilters('2★ & above'):""; setcheck3(!check3);}} checked={check3}/>
+                    <input type="checkbox" onClick={()=>{!check3?addfilters('2★ & above'):""; setcheck3(true);}} checked={check3}/>
                     <h3 className="ml-2">2&#9733; & above</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check4?addfilters('1★ & above'):""; setcheck4(!check4);}} checked={check4}/>
+                    <input type="checkbox" onClick={()=>{!check4?addfilters('1★ & above'):""; setcheck4(true);}} checked={check4}/>
                     <h3 className="ml-2">1&#9733; & above</h3>
                 </div>
         </div>
@@ -156,19 +169,19 @@ export default function Filter () {
         <h1 className="mt-2 ml-4">Brands</h1>
         <div className="min-h-[50px]  w-[270px] flex flex-col justify-center items-center">
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" onClick={()=>{!check5?addfilters('Apple'):""; setcheck5(!check5);}}  checked={check5}/>
+                    <input type="checkbox" onClick={()=>{!check5?addfilters('Apple'):""; setcheck5(true);}}  checked={check5}/>
                     <h3 className="ml-2">Apple</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check6?addfilters('Asus'):""; setcheck6(!check6);}} checked={check6}/>
+                    <input type="checkbox" onClick={()=>{!check6?addfilters('Asus'):""; setcheck6(true);}} checked={check6}/>
                     <h3 className="ml-2">Asus</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check7?addfilters('Hp'):""; setcheck7(!check7);}} checked={check7}/>
+                    <input type="checkbox" onClick={()=>{!check7?addfilters('Hp'):""; setcheck7(true);}} checked={check7}/>
                     <h3 className="ml-2">Hp</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check8?addfilters('Lenevo'):""; setcheck8(!check8);}} checked={check8}/>
+                    <input type="checkbox" onClick={()=>{!check8?addfilters('Lenevo'):""; setcheck8(true);}} checked={check8}/>
                     <h3 className="ml-2">Lenovo</h3>
                 </div>
         </div>
@@ -176,11 +189,11 @@ export default function Filter () {
         <h1 className="mt-2 ml-4">Offers</h1>
         <div className="min-h-[50px] w-[270px] flex flex-col justify-center items-center">
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" onClick={()=>{!check9?addfilters('No Cost EMI'):""; setcheck9(!check9);}} checked={check9}/>
+                    <input type="checkbox" onClick={()=>{!check9?addfilters('No Cost EMI'):""; setcheck9(true);}} checked={check9}/>
                     <h3 className="ml-2">No Cost EMI</h3>
                 </div>
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check10?addfilters('Special Price'):""; setcheck10(!check10);}} checked={check10}/>
+                    <input type="checkbox" onClick={()=>{!check10?addfilters('Special Price'):""; setcheck10(true);}} checked={check10}/>
                     <h3 className="ml-2">Special Price</h3>
                 </div>
             
