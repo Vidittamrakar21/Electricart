@@ -126,7 +126,7 @@ export default function Filter () {
         <h1 className="ml-4 text-[18px] font-[500] mt-2">Filters</h1>
         <div className="ml-4 min-h-[50px] w-[270px] flex flex-row flex-wrap mt-2">
            {filters.map((item,index)=>(
-             <div className="h-[35px] min-w-[90px] max-w-[200px] text-[black] text-[13px] p-2 bg-[#a3a3a3d5] rounded-[4px] flex justify-center items-center mt-2 ml-1">
+             <div key={index} className="h-[35px] min-w-[90px] max-w-[200px] text-[black] text-[13px] p-2 bg-[#a3a3a3d5] rounded-[4px] flex justify-center items-center mt-2 ml-1">
              <div onClick={()=>{removefilter(index,item)}}>
                  x
              </div>

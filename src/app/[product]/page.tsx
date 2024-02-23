@@ -97,7 +97,7 @@ export default function Product () {
                               4.1 &#9733;
                          </div>
                             <h1 className=" ml-2 text-[14px] sm1:mt-2">
-                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn't care about this issue.
+                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn&apos; t care about this issue.
                             </h1>
                         </div>
 
@@ -107,7 +107,7 @@ export default function Product () {
                               4.1 &#9733;
                          </div>
                             <h1 className=" ml-2 text-[14px] sm1:mt-2">
-                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn't care about this issue.
+                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn&apos;t care about this issue.
                             </h1>
                         </div>
 
@@ -117,7 +117,7 @@ export default function Product () {
                               4.1 &#9733;
                          </div>
                             <h1 className=" ml-2 text-[14px] sm1:mt-2">
-                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn't care about this issue.
+                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn&apos;t care about this issue.
                             </h1>
                         </div>
                 </div>
