@@ -1,6 +1,16 @@
+import {useRouter} from 'next/navigation'
+
+
 export  default function Itemcard () {
+
+    const router = useRouter()
+
+    const handleroute = () =>{
+            router.push('/product')
+    }
+
     return(
-        <div className=" h-[440px] w-[320px] bg-[white] mt-4 ml-4 flex flex-col items-start justify-start cursor-pointer sm1:h-[300px] sm1:w-[160px] sm1:ml-2" >
+        <div onClick={handleroute} className=" h-[440px] w-[320px] bg-[white] mt-4 ml-4 flex flex-col items-start justify-start cursor-pointer sm1:h-[300px] sm1:w-[160px] sm1:ml-2" >
         <div className="h-[250] w-[320px] sm1:h-[140px] sm1:w-[160px]">
             <img className="h-[100%] w-[100%]" src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/refurb-mbp14-space-m1-2021_GEO_CH?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1638575280000" alt="" />
         </div>
