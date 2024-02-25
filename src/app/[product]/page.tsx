@@ -6,7 +6,7 @@ export default function Product () {
                         <img className="h-[100%] w-[100%]" src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/refurb-mbp14-space-m1-2021_GEO_CH?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1638575280000" alt="" />
                     </div>
 
-                    <div className="h-[100px] w-[500px] flex justify-evenly items-center sm1:fixed sm1:bottom-0 sm1:w-[100%] sm1:left-0 sm1:right-0 sm1:z-10">
+                    <div className="h-[100px] w-[500px] flex justify-evenly items-center sm1:fixed sm1:bottom-0 sm1:w-[100%] sm1:left-0 sm1:right-0 sm1:z-10 sm1:h-[50px]">
                             <button className="h-[50px] w-[190px] bg-[#f0a822] text-[white] sm1:w-[100%]">Add To Cart</button>
                             <button className="h-[50px] w-[190px] bg-[#EB6A2E] text-[white] sm1:w-[100%]"> Buy Now</button>
                     </div>
