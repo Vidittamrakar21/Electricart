@@ -1,4 +1,15 @@
+"use client"
+import {useRouter} from 'next/navigation'
+
+
 export default function Product () {
+
+    const router = useRouter()
+
+    const movepayment = () => {
+        router.push('/checkout')
+    }
+ 
     return (
         <div className="min-h-[900px] flex justify-center items-start mt-[100px] select-none sm1:flex-col sm1:items-center sm1:mt-[70px]">
                 <div className="h-[500px] w-[500px]  bg-[white] flex justify-center items-center flex-col fixed left-[280px] sm1:relative sm1:left-[0px] sm1:w-[340px] sm1:h-[400px]">
@@ -8,7 +19,7 @@ export default function Product () {
 
                     <div className="h-[100px] w-[500px] flex justify-evenly items-center sm1:fixed sm1:bottom-0 sm1:w-[100%] sm1:left-0 sm1:right-0 sm1:z-10 sm1:h-[50px]">
                             <button className="h-[50px] w-[190px] bg-[#f0a822] text-[white] sm1:w-[100%]">Add To Cart</button>
-                            <button className="h-[50px] w-[190px] bg-[#EB6A2E] text-[white] sm1:w-[100%]"> Buy Now</button>
+                            <button onClick={movepayment} className="h-[50px] w-[190px] bg-[#EB6A2E] text-[white] sm1:w-[100%]"> Buy Now</button>
                     </div>
 
                 </div>

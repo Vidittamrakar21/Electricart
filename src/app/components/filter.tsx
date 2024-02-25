@@ -116,8 +116,8 @@ export default function Filter () {
         </div>
 
 
-          <div className={filter?"sm1:fixed sm1:z-6  sm1:top-0 sm1:right-0 sm1:left-0 sm1:bottom-0 sm1:bg-[#3b3b3b9d] sm1:mt-[96px]  overflow-y-scroll sm1:z-19":"sm1:fixed sm1:top-0 sm1:right-0 sm1:left-0 sm1:bottom-0 sm1:bg-[#3b3b3b9d] sm1:mt-[96px] sm1:hidden sm1:z-19"}>
-              <div  className="min-h-[500px] w-[280px] bg-[white] absolute left-[30px] cursor-pointer select-none flex flex-col items-start justify-center sm1:left-0 sm1:mb-3 sm1:z-25 sm1:absolute sm1:min-h-[500px] overflow-y-scroll" >
+          <div className={filter?"sm1:fixed sm1:z-6  sm1:top-0 sm1:right-0 sm1:left-0 sm1:bottom-0 sm1:bg-[#3b3b3b9d] sm1:mt-[96px]  sm1:overflow-y-scroll sm1:z-19":"sm1:fixed sm1:top-0 sm1:right-0 sm1:left-0 sm1:bottom-0 sm1:bg-[#3b3b3b9d] sm1:mt-[96px] sm1:hidden sm1:z-19"}>
+              <div  className="min-h-[500px] w-[280px] bg-[white] absolute left-[30px] cursor-pointer select-none flex flex-col items-start justify-center sm1:left-0 sm1:mb-3 sm1:z-25 sm1:absolute sm1:min-h-[500px] sm1:overflow-y-scroll" >
                 <div onClick={handlefilter}  className="hidden sm1:flex sm1:relative sm1:left-[240px] sm1:top-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="black"  viewBox="0 0 16 16">
                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>

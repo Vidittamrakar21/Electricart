@@ -1,8 +1,15 @@
 "use client"
 
 import { useState } from "react"
+import {useRouter} from 'next/navigation'
 
 export default function Cart() {
+
+    const router = useRouter()
+
+    const movepayment = () => {
+        router.push('/checkout')
+    }
 
 
     const [itemcount , setcount ] = useState(1);
@@ -116,7 +123,7 @@ export default function Cart() {
                     </div>
 
 
-                        <button className="h-[40px] w-[180px] bg-[#eb6a2e] text-[white] relative top-[10px] cursor-pointer left-[0px]" >Place Order</button>
+                        <button onClick={movepayment} className="h-[40px] w-[180px] bg-[#eb6a2e] text-[white] relative top-[10px] cursor-pointer left-[0px]" >Place Order</button>
                 </div>
             </div>
         </div>
