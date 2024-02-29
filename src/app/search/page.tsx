@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation'
 import Itemcard from "../components/itemcard"
 import Filter from "../components/filter"
 
+import Itemcardskeleton from "../components/itemcardskeleton"
 export default function Search (){
 
     const router = useRouter()
@@ -35,7 +36,8 @@ export default function Search (){
 
         <div className="flex flex-row justify-center items-start min-h-[1200px] w-[100%] relative top-[100px]">
             <Filter></Filter>
-            <div className=" flex flex-row justify-start items-center min-h-[900px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
+            <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
+             <Itemcard></Itemcard>
             <Itemcard></Itemcard>
             <Itemcard></Itemcard>
             <Itemcard></Itemcard>
@@ -58,9 +60,13 @@ export default function Search (){
             <Itemcard></Itemcard>
             <Itemcard></Itemcard>
             <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
+            <Itemcard></Itemcard> 
           
+          {/* <Itemcardskeleton></Itemcardskeleton>
+          <Itemcardskeleton></Itemcardskeleton>
+          <Itemcardskeleton></Itemcardskeleton>
+          <Itemcardskeleton></Itemcardskeleton> */}
+       
            
             </div>
         </div>
