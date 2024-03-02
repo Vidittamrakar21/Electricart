@@ -31,7 +31,8 @@ export default function Product () {
                     4.1 &#9733;
                 </div>
                 <h3 className="font-[600] ml-1  text-[22px] mt-4"> &#8377; 92,000 </h3>
-                <h2 className="mt-2">Available Offers</h2>
+                <h5 className=" line-through text-[14px] text-[gray] ml-2">&#8377; 1,06,580</h5>
+                <h2 className="mt-2 ml-2">Available Offers</h2>
 
                 <div className="flex flex-col h-[180px] w-[850px] border items-start justify-start  sm1:w-[340px] sm1:h-[280px]" >
                     <div className="flex flex-row w-[800px] items-start justify-start mt-4 sm1:w-[320px]">
