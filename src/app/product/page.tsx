@@ -1,6 +1,6 @@
 "use client"
 import {useRouter} from 'next/navigation'
-
+import { useState } from 'react'
 
 export default function Product () {
 
@@ -8,6 +8,18 @@ export default function Product () {
 
     const movepayment = () => {
         router.push('/checkout')
+    }
+    const movecart = () => {
+        router.push('/cart')
+    }
+    const movehome = () => {
+        router.push('/')
+    }
+
+    const [box , isbox] = useState<Boolean>(false)
+
+    const handlebox = () =>{
+        isbox(true)
     }
  
     return (
@@ -18,7 +30,7 @@ export default function Product () {
                     </div>
 
                     <div className="h-[100px] w-[500px] flex justify-evenly items-center sm1:fixed sm1:bottom-0 sm1:w-[100%] sm1:left-0 sm1:right-0 sm1:z-10 sm1:h-[50px]">
-                            <button className="h-[50px] w-[190px] bg-[#f0a822] text-[white] sm1:w-[100%]">Add To Cart</button>
+                            <button onClick={handlebox} className="h-[50px] w-[190px] bg-[#f0a822] text-[white] sm1:w-[100%]">Add To Cart</button>
                             <button onClick={movepayment} className="h-[50px] w-[190px] bg-[#EB6A2E] text-[white] sm1:w-[100%]"> Buy Now</button>
                     </div>
 
@@ -136,6 +148,17 @@ export default function Product () {
 
 
 
+                </div>
+
+                <div className={box?"fixed top-0 flex justify-center items-center left-0 right-0 bottom-0 bg-[#3b3b3b7a]":"hidden"}>
+                <div className="h-[120px] w-[400px] sm1:w-[340px] flex flex-col justify-start items-start shadow-xl rounded-[8px] bg-[white] ">
+                   
+                   <h1 className="text-[16px] ml-[60px] mt-5 font-[500]">Item is added to your cart !</h1>
+                   <div className="h-[50px] w-[380px] sm1:w-[320px] flex justify-center items-center">
+                   <button onClick={movecart} className="h-[35px] w-[120px] ml-5 mt-5 bg-[#FB641B] text-[white] text-[15px]">Go To Cart</button>
+                   <button onClick={movehome} className="h-[35px] w-[120px] ml-5 mt-5 bg-[white] text-[black] border border-[#acacac] text-[15px]">Keep Shopping</button>
+                   </div>
+               </div>
                 </div>
         </div>
     )
