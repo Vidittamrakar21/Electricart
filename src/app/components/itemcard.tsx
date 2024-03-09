@@ -32,9 +32,9 @@ export  default function Itemcard (props: itemtype) {
 
     return(
         <div onClick={handleroute} className=" h-[440px] w-[320px] bg-[white] mt-4 ml-4 flex flex-col items-start justify-start cursor-pointer sm1:h-[300px] sm1:w-[160px] sm1:ml-2" >
-        <div className="h-[250] w-[320px] sm1:h-[140px] sm1:w-[160px]">
-            <img className="h-[100%] w-[100%]" src={props.image} alt="" />
-        </div>
+        <div className="h-[250px] w-[320px] sm1:h-[140px] sm1:w-[160px] flex items-center justify-center bg-[white]">
+            <img className="min-h-[50%] max-h-[100%] min-w-[50%] max-w-[100%]" src={props.image} alt="" />
+        </div> 
         <h2 className=" mt-3 text-[black] ml-1" >{truncateTitle(props.title,6)}</h2>
         <h4 className="text-[13px] text-[#808080] font-[400] ml-1">{props.spec}</h4>
         <div className="w-[40px] h-[20px] bg-[green] text-[white] mt-2 ml-1 text-[13px] flex items-center justify-center rounded-[5px]">

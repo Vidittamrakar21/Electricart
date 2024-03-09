@@ -73,7 +73,7 @@ client.query({
 
         
 
-        <div className="flex flex-row justify-center items-start min-h-[1200px] w-[100%] relative top-[100px]">
+        <div className="flex flex-row justify-center items-start min-h-[500px] w-[100%] relative top-[100px]">
             <Filter></Filter>
             <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
             {data.map((item: itemtype, index:number)=>(
