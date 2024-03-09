@@ -1,18 +1,57 @@
 "use client"
 
 import Footer from "../components/footer"
-import {useRouter} from 'next/navigation'
+import {useRouter,useSearchParams} from 'next/navigation'
+
+import { useParams } from "next/navigation"
 import Itemcard from "../components/itemcard"
 import Filter from "../components/filter"
-
+import { client } from "../page"
 import Itemcardskeleton from "../components/itemcardskeleton"
+import { gql, useQuery } from "@apollo/client"
+import { useState } from "react"
+
+type itemtype = {
+    title: string
+    spec: string
+    rating: number
+    price: number
+    image: string
+
+}
+
 export default function Search (){
 
+    
     const router = useRouter()
+    const searchParams = useSearchParams()
+
+    const param = searchParams.get('param')
+    const key = param?.toString()
 
     const gohome = () =>{
         router.push('/')
     }
+
+    console.log(key)
+
+    const [data, setdata] = useState([])
+
+client.query({
+    query: gql`
+{
+    getbycategory(category:"${param}"){
+    title
+    spec
+    rating
+    price
+    image
+    }
+}
+`
+}).then((result)=>{console.log(result); setdata(result.data.getbycategory)});
+
+  
 
     return(
 
@@ -37,30 +76,9 @@ export default function Search (){
         <div className="flex flex-row justify-center items-start min-h-[1200px] w-[100%] relative top-[100px]">
             <Filter></Filter>
             <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
-             <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard>
-            <Itemcard></Itemcard> 
+            {data.map((item: itemtype, index:number)=>(
+                <Itemcard key={index} title={item.title} spec={item.spec} rating={item.rating} price={item.price} image={item.image}></Itemcard>
+            ))} 
           
           {/* <Itemcardskeleton></Itemcardskeleton>
           <Itemcardskeleton></Itemcardskeleton>

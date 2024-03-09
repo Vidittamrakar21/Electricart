@@ -5,7 +5,13 @@ import "./globals.css";
 import Signpage from "./components/sign/sign";
 import Navbar from "./components/nav";
 import Footer from "./components/footer";
+import { ApolloClient ,InMemoryCache , ApolloProvider} from "@apollo/client";
 
+const client = new ApolloClient({
+
+  uri: "http://localhost:8000/graphql",
+  cache: new InMemoryCache()
+});
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +29,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       
-        {children}
+         
+           {children}
            {/* <Signpage></Signpage> */}
             <Navbar></Navbar>
 
             <Footer></Footer>
+         
         
     
       </body>
