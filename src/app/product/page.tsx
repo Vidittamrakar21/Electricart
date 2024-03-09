@@ -1,10 +1,32 @@
 "use client"
-import {useRouter} from 'next/navigation'
+import {useRouter, useSearchParams} from 'next/navigation'
 import { useState } from 'react'
+import {client} from "../page"
+import { gql} from "@apollo/client"
+
+
+
 
 export default function Product () {
 
+     interface producttype {
+        title: string,
+        spec: string,
+        originalprice: number,
+        price: number,
+        category: string,
+        brand: string,
+        delivery: string,
+        seller: string,
+        description: string,
+        rating: number,
+        image: string,
+    }
+
+
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
 
     const movepayment = () => {
         router.push('/checkout')
@@ -21,12 +43,38 @@ export default function Product () {
     const handlebox = () =>{
         isbox(true)
     }
+    //@ts-ignore
+    const [data, setdata] = useState<producttype>({})
+
+    client.query({
+        query: gql`
+    {
+        getbyid(id:"${id}"){
+            title
+            spec
+            originalprice
+            price
+            category
+            brand
+            delivery
+            seller
+            description
+            rating
+            reviews {
+              rate
+              review
+            }
+            image
+        }
+    }
+    `
+    }).then((result)=>{console.log(result); setdata(result.data.getbyid)});
  
     return (
         <div className="min-h-[900px] flex justify-center items-start mt-[100px] select-none sm1:flex-col sm1:items-center sm1:mt-[70px]">
                 <div className="h-[500px] w-[500px]  bg-[white] flex justify-center items-center flex-col fixed left-[280px] sm1:relative sm1:left-[0px] sm1:w-[340px] sm1:h-[400px]">
-                    <div className="h-[400px] w-[400px] border mt-2  sm1:w-[300px] sm1:h-[300px]">
-                        <img className="h-[100%] w-[100%]" src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/refurb-mbp14-space-m1-2021_GEO_CH?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1638575280000" alt="" />
+                    <div className="h-[400px] w-[400px] border mt-2  sm1:w-[300px] sm1:h-[300px] flex items-center justify-center bg-[white]">
+                        <img className="min-h-[50%] max-h-[100%] min-w-[50%] max-w-[100%]" src={data.image} alt="" />
                     </div>
 
                     <div className="h-[100px] w-[500px] flex justify-evenly items-center sm1:fixed sm1:bottom-0 sm1:w-[100%] sm1:left-0 sm1:right-0 sm1:z-10 sm1:h-[50px]">
@@ -37,13 +85,13 @@ export default function Product () {
                 </div>
 
                 <div className=" min-h-[600px] w-[900px] mb-[50px]  bg-[white] flex flex-col justify-start ml-[550px] sm1:w-[340px] sm1:ml-0">
-                <h1 className=" mt-3 text-[black] ml-1 text-[19px]" >Apple 2022 Macbook Air Apple M2 - (8 GB/256 GB SSD/Mac OS Big Sur) MGN63HN/A  (13.3 inch, Space Grey, 1.29 kg)</h1>
-               <h4 className="text-[15px] text-[#808080] font-[400] ml-1">Gray,256gb</h4>
+                <h1 className=" mt-3 text-[black] ml-1 text-[19px]" >{data.title}</h1>
+               <h4 className="text-[15px] text-[#808080] font-[400] ml-1">{data.spec}</h4>
                <div className="w-[50px] h-[25px] bg-[green] text-[white] mt-2 ml-1 text-[15px] flex items-center justify-center rounded-[5px]">
-                    4.1 &#9733;
+                    {data.rating} &#9733;
                 </div>
-                <h3 className="font-[600] ml-1  text-[22px] mt-4"> &#8377; 92,000 </h3>
-                <h5 className=" line-through text-[14px] text-[gray] ml-2">&#8377; 1,06,580</h5>
+                <h3 className="font-[600] ml-1  text-[22px] mt-4"> &#8377; {data.price} </h3>
+                <h5 className=" line-through text-[14px] text-[gray] ml-2">&#8377; {data.originalprice}</h5>
                 <h2 className="mt-2 ml-2">Available Offers</h2>
 
                 <div className="flex flex-col h-[180px] w-[850px] border items-start justify-start  sm1:w-[340px] sm1:h-[280px]" >
@@ -94,8 +142,8 @@ export default function Product () {
                  </svg>
 
                  <div className="flex flex-row justify-center items-center ml-2">
-                    <h2 className="text-[green] sm1:text-[13px]">Free Delivery</h2>
-                    <h2 className="line-through sm1:text-[13px] text-[gray]">&#8377;120</h2>
+                    {data.delivery === "Free"? <><h2 className="text-[green] sm1:text-[13px]">Free Delivery</h2>
+                    <h2 className="line-through sm1:text-[13px] text-[gray]">&#8377;90</h2></>: <h2 className=" sm1:text-[13px] text-[gray]">&#8377; {data.delivery}</h2> }
                     <h2 className="font-[500] ml-2 sm1:text-[13px]">Delivered by 1 March ,Friday</h2>
                     </div>
 
@@ -103,13 +151,13 @@ export default function Product () {
 
                 <div className="flex flex-row items-center justify-start w-[800px] sm1:w-[320px] h-[30px] mt-4 ml-2">
                         <h2 className="text-[gray]">Seller</h2>
-                        <h1 className="text-[blue] ml-3">TREASURE HAUL ONLINE</h1>
+                        <h1 className="text-[blue] ml-3">{data.seller}</h1>
 
                 </div>
                 
                 <div className="flex flex-row items-start justify-start w-[800px] sm1:w-[320px] min-h-[30px] mt-4 ml-2">
                         <h2 className="text-[gray]">Description</h2>
-                        <h1 className=" ml-3 text-[14px]">This Apple Macbook is powered by the Apple M1 chip and is easily portable so that you can carry it with you anywhere you want. This thin and light notebook is equipped with an 8-core CPU to handle all your tasks more efficiently. The 8-core GPU of this notebook takes graphic-intensive games and apps to a whole new level. It also comes with a 16-core Neural Engine to do machine learning tasks more effectively. Its fan-less design offers silent operations and has a long-lasting battery life which can last up to 18 hours on a single charge.</h1>
+                        <h1 className=" ml-3 text-[14px]">{data.description? data.description: "NA"}</h1>
 
                 </div>
 

@@ -12,6 +12,7 @@ import { gql, useQuery } from "@apollo/client"
 import { useState } from "react"
 
 type itemtype = {
+    _id: string
     title: string
     spec: string
     rating: number
@@ -41,6 +42,7 @@ client.query({
     query: gql`
 {
     getbycategory(category:"${param}"){
+    _id    
     title
     spec
     rating
@@ -77,7 +79,7 @@ client.query({
             <Filter></Filter>
             <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
             {data.map((item: itemtype, index:number)=>(
-                <Itemcard key={index} title={item.title} spec={item.spec} rating={item.rating} price={item.price} image={item.image}></Itemcard>
+                <Itemcard key={index} id={item._id} title={item.title} spec={item.spec} rating={item.rating} price={item.price} image={item.image}></Itemcard>
             ))} 
           
           {/* <Itemcardskeleton></Itemcardskeleton>

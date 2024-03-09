@@ -1,6 +1,7 @@
 import {useRouter} from 'next/navigation'
 
 type itemtype = {
+    id: string
     title: string
     spec: string
     rating: number
@@ -14,7 +15,7 @@ export  default function Itemcard (props: itemtype) {
     const router = useRouter()
 
     const handleroute = () =>{
-            router.push('/product')
+            router.push(`/product?id=${props.id}`)
             
     }
 
