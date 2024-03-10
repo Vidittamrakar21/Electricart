@@ -20,6 +20,7 @@ export default function Product () {
         seller: string,
         description: string,
         rating: number,
+        reviews: [],
         image: string,
     }
 
@@ -69,6 +70,88 @@ export default function Product () {
     }
     `
     }).then((result)=>{console.log(result); setdata(result.data.getbyid)});
+
+    const fulldate = new Date(Date.now());
+    const date = fulldate.getDate();
+    const day = fulldate.getDay();
+    const month = fulldate.getMonth();
+    console.log("date", day ,date , month)
+
+   
+
+    const getday = (x:number) => {
+        if(x=== 0 || x=== 7){
+            return "Sunday"
+        }
+        else if(x=== 1|| x=== 8){
+            return "Monday"
+        }
+        else if(x=== 2|| x=== 9){
+            return "Tuesday"
+        }
+        else if(x=== 3|| x=== 10){
+            return "Wednesday"
+        }
+        else if(x=== 4|| x=== 11){
+            return "Thursday"
+        }
+        else if(x=== 5|| x=== 12){
+            return "Friday"
+        }
+        else if(x=== 6|| x=== 13){
+            return "Saturday"
+        }
+    }
+
+    const getmonth  = (x:number)=>{
+        if(x === 0){
+            return "January"
+        }
+        else if(x === 1){
+            return "February"
+        }
+        else if(x === 2){
+            return "March"
+        }
+        else if(x === 3){
+            return "April"
+        }
+        else if(x === 4){
+            return "May"
+        }
+        else if(x === 5){
+            return "June"
+        }
+        else if(x === 6){
+            return "July"
+        }
+        else if(x === 7){
+            return "August"
+        }
+        else if(x === 8){
+            return "September"
+        }
+        else if(x === 9){
+            return "October"
+        }
+        else if(x === 10){
+            return "November"
+        }
+        else if(x === 11){
+            return "December"
+        }
+    }
+
+    const getdeliverydate = (x:number, y:number, z:number) => {
+        const day = getday(x)
+        const month = getmonth(y)
+        return `Delivered by ${z} ${month},${day}`
+    }
+
+    type reviewtype = {
+        rate: number | null
+        review: string | null
+    }
 
     //@ts-ignore
     if(data === ""){
@@ -177,7 +260,7 @@ export default function Product () {
                  <div className="flex flex-row justify-center items-center ml-2">
                     {data.delivery === "Free"? <><h2 className="text-[green] sm1:text-[13px]">Free Delivery</h2>
                     <h2 className="line-through sm1:text-[13px] text-[gray]">&#8377;90</h2></>: <h2 className=" sm1:text-[13px] text-[gray]">&#8377; {data.delivery}</h2> }
-                    <h2 className="font-[500] ml-2 sm1:text-[13px]">Delivered by 1 March ,Friday</h2>
+                    <h2 className="font-[500] ml-2 sm1:text-[13px]">{getdeliverydate(day+5,month,date+5)}</h2>
                     </div>
 
                 </div>
@@ -188,43 +271,28 @@ export default function Product () {
 
                 </div>
                 
-                <div className="flex flex-row items-start justify-start w-[800px] sm1:w-[320px] min-h-[30px] mt-4 ml-2">
+                <div className="mb-5 flex flex-row items-start justify-start w-[800px] sm1:w-[320px] min-h-[30px] mt-4 ml-2">
                         <h2 className="text-[gray]">Description</h2>
                         <h1 className=" ml-3 text-[14px]">{data.description? data.description: "NA"}</h1>
 
                 </div>
 
-                <h1 className="text-[22px] font-[500] mt-4 ml-4">Rating And Reviews</h1>
+                <h1 className={(data.reviews).length > 1 ? "text-[22px] font-[500] mt-4 ml-4": "hidden"}>Rating And Reviews</h1>
 
-                <div className="flex flex-col items-start justify-start w-[800px] sm1:w-[320px] min-h-[90px] mt-4 ml-2">
-                        <div className="flex flex-col items-start justify-start w-[800px] sm1:w-[340px] min-h-[50px] mt-4" >
-                        <div className="w-[40px] h-[20px] bg-[green] text-[white] mt-2 ml-1 text-[12px] flex items-center justify-center rounded-[5px]">
-                              4.1 &#9733;
-                         </div>
-                            <h1 className=" ml-2 text-[14px] sm1:mt-2">
-                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn&apos; t care about this issue.
-                            </h1>
-                        </div>
-
-
-                        <div className="flex flex-col items-start justify-start w-[800px] sm1:w-[320px] min-h-[50px] mt-4" >
-                        <div className="w-[40px] h-[20px] bg-[green] text-[white] mt-2 ml-1 text-[12px] flex items-center justify-center rounded-[5px]">
-                              4.1 &#9733;
-                         </div>
-                            <h1 className=" ml-2 text-[14px] sm1:mt-2">
-                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn&apos;t care about this issue.
-                            </h1>
-                        </div>
+                <div className={(data.reviews).length>1?" mb-5 flex flex-col items-start justify-start w-[800px] sm1:w-[320px] min-h-[90px] mt-4 ml-2": "hidden"}>
+                       {(data.reviews).length>1? (data.reviews).map((item: reviewtype, index: number)=>(
+                             <div className="flex flex-col items-start justify-start w-[800px] sm1:w-[340px] min-h-[50px] mt-4" >
+                             <div className="w-[40px] h-[20px] bg-[green] text-[white] mt-2 ml-1 text-[12px] flex items-center justify-center rounded-[5px]">
+                                   {item.rate} &#9733;
+                              </div>
+                                 <h1 className=" ml-2 text-[14px] sm1:mt-2">
+                                 {item.review}
+                                 </h1>
+                             </div>
+                       )): <></>}
 
 
-                        <div className="flex flex-col items-start justify-start w-[800px] sm1:w-[320px] min-h-[50px] mt-4" >
-                        <div className="w-[40px] h-[20px] bg-[green] text-[white] mt-2 ml-1 text-[12px] flex items-center justify-center rounded-[5px]">
-                              4.1 &#9733;
-                         </div>
-                            <h1 className=" ml-2 text-[14px] sm1:mt-2">
-                            Value for money product...But no one said this major issue on every mac. If I touch or rub the mac body while charging, I can feel some electric sensation passing through my body.. when I searched about the issue, this issue has existed for the last 10 years on all mac devices because of 2 pin chargers without ground. This issue can be resolved only with a 3 pin charger with ground. This issue should be resolved by mac providing 3 pin charger but they didn&apos;t care about this issue.
-                            </h1>
-                        </div>
+                        
                 </div>
 
 
