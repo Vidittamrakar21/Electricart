@@ -44,7 +44,7 @@ export default function Product () {
         isbox(true)
     }
     //@ts-ignore
-    const [data, setdata] = useState<producttype>({})
+    const [data, setdata] = useState<producttype>("")
 
     client.query({
         query: gql`
@@ -69,6 +69,39 @@ export default function Product () {
     }
     `
     }).then((result)=>{console.log(result); setdata(result.data.getbyid)});
+
+    //@ts-ignore
+    if(data === ""){
+        return(
+            <div className="animate-pulse min-h-[900px] flex justify-center items-start mt-[100px] select-none sm1:flex-col sm1:items-center sm1:mt-[70px]">
+                <div className="h-[500px] w-[500px]  bg-[white] flex justify-center items-center flex-col fixed left-[280px] sm1:relative sm1:left-[0px] sm1:w-[340px] sm1:h-[400px]">
+                    <div className="h-[400px] w-[400px] rounded-[10px] bg-slate-400 border mt-2  sm1:w-[300px] sm1:h-[300px] flex items-center justify-center ">
+                        
+                    </div>
+
+                    <div className="h-[100px] w-[500px] flex justify-evenly items-center sm1:fixed sm1:bottom-0 sm1:w-[100%] sm1:left-0 sm1:right-0 sm1:z-10 sm1:h-[50px]">
+                            <button onClick={handlebox} className="h-[50px] w-[190px] bg-[#f0a822] text-[white] sm1:w-[100%]">Add To Cart</button>
+                            <button onClick={movepayment} className="h-[50px] w-[190px] bg-[#EB6A2E] text-[white] sm1:w-[100%]"> Buy Now</button>
+                    </div>
+
+                </div>
+
+                <div className=" min-h-[600px] w-[900px] mb-[50px]  bg-[white] flex flex-col justify-start ml-[550px] sm1:w-[340px] sm1:ml-0">
+                <div className=" mt-3 h-[20px] w-[800px] sm1:w-[300px] rounded-[10px] bg-slate-400 ml-1 " ></div>
+               <h4 className="text-[15px] text-[#808080] font-[400] ml-1"></h4>
+               <div className="w-[50px] h-[25px] bg-slate-400 text-[white] mt-2 ml-1 text-[15px] flex items-center justify-center rounded-[5px]">
+                    
+                </div>
+                
+                <div className=" mt-3 h-[20px] w-[50px] sm1:w-[90px] rounded-[10px] bg-slate-400 ml-1 " ></div>
+                <div className=" mt-3 h-[500px] w-[800px] sm1:w-[320px] ml-2 rounded-[10px] bg-slate-400  " ></div>
+               
+               
+
+          </div>
+        </div>
+        )
+    }
  
     return (
         <div className="min-h-[900px] flex justify-center items-start mt-[100px] select-none sm1:flex-col sm1:items-center sm1:mt-[70px]">
