@@ -37,6 +37,19 @@ export default function Search (){
     console.log(key)
 
     const [data, setdata] = useState([])
+    const [box, openbox] = useState(false)
+//@ts-ignore
+    const searchbox = (e)=> {
+        if(e.target.value === ""){
+            openbox(false)
+        }
+        else{
+            openbox(true)
+        }
+
+
+
+    }
 
 client.query({
     query: gql`
@@ -54,6 +67,33 @@ client.query({
 }).then((result)=>{setdata(result.data.getbycategory)});
 
 
+    if(!param){
+        return(
+
+            <div className=" min-h-[800px] flex flex-col justify-center items-center"> 
+             <nav className=" w-full h-14 bg-white flex flex-row  top-0 items-center justify-center select-none fixed z-30 border-b sm1:fixed sm1:z-30">
+               <h1 className=" font-sans text-[27px] cursor-pointer sm1:hidden relative right-[100px]" onClick={gohome}>Electricart</h1>
+            <div className=" flex flex-row items-start justify-center cursor-pointer  relative right-6 sm1:right-[5px]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black"  viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+                </div>
+             <input onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
+
+    
+            </nav>
+            {/* searchbox */}
+
+            <div className={box?"h-[200px] shadow-lg w-[384px] bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+            </div>
+
+             <h1 className="text-[19px]">Search Results will appear here.</h1> 
+
+            </div>
+        )
+    }
+
+
     if(data.length === 0){
         return(
             <div className=" min-h-[900px] flex flex-col justify-center items-center"> 
@@ -64,13 +104,17 @@ client.query({
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
                 </div>
-             <input type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
+             <input onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
     
             </nav>
     
+             {/* searchbox */}
+
+             <div className={box?"h-[200px] w-[384px] shadow-lg bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+            </div>
             
     
-            {/* <h1 className="text-[19px]">Search Results will appear here.</h1> */}
+            
     
             
     
@@ -104,10 +148,14 @@ client.query({
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
             </div>
-         <input type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
+         <input onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
 
         </nav>
 
+         {/* searchbox */}
+
+         <div className={box?"h-[200px] shadow-lg w-[384px] bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+            </div>
         
 
         {/* <h1 className="text-[19px]">Search Results will appear here.</h1> */}
