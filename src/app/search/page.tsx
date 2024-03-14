@@ -27,7 +27,7 @@ export default function Search (){
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const param = searchParams.get('param')
+    let param = searchParams.get('param')
     const key = param?.toString()
 
     const gohome = () =>{
@@ -38,17 +38,114 @@ export default function Search (){
 
     const [data, setdata] = useState([])
     const [box, openbox] = useState(false)
+    const [opt, setopt] = useState([""])
 //@ts-ignore
     const searchbox = (e)=> {
         if(e.target.value === ""){
             openbox(false)
+           
+
         }
         else{
             openbox(true)
+            if(e.target.value === "s" || e.target.value === "S" ){
+                setopt(["Smartphone", "smartwatch", "Speaker" ])
+            }
+            else if(e.target.value === "smart" || e.target.value === "Smart" ){
+                setopt(["Smartphone", "Smartwatch" ])
+            }
+
+            else if(e.target.value === "spe" || e.target.value === "Spe" ){
+                setopt(["Speaker"])
+            }
+
+            else if(e.target.value === "speaker" || e.target.value === "Speaker" ){
+                setopt(["Speaker"])
+            }
+
+            else if(e.target.value === "mo" || e.target.value === "Mo" || e.target.value === "m" ){
+                setopt(["Mobile","Mouse"])
+            }
+
+            else if(e.target.value === "mobile" || e.target.value === "mob" ){
+                setopt(["Mobile"])
+            }
+
+            else if(e.target.value === "mouse" || e.target.value === "mou" ){
+                setopt(["Mouse"])
+            }
+
+            else if( e.target.value === "w" || e.target.value === "W" ){
+                setopt(["Watch", "washing machine"])
+            }
+            else if(e.target.value === "wat" || e.target.value === "watch" ){
+                setopt(["watch"])
+            }
+            else if(e.target.value === "wash" || e.target.value === "washing machine"  ){
+                setopt(["Washing Machine"])
+            }
+
+            else if(e.target.value === "h" || e.target.value === "head" || e.target.value === "headphone" || e.target.value === "H" ){
+                setopt(["Headphone"])
+            }
+
+            else if(e.target.value === "l" || e.target.value === "lap" || e.target.value === "laptop" || e.target.value === "L" ){
+                setopt(["Laptop"])
+            }
+
+            else if(e.target.value === "t" || e.target.value === "T"  ){
+                setopt(["TV","Trimmer"])
+            }
+            else if(e.target.value === "tv" || e.target.value === "TV" || e.target.value === "screen" || e.target.value === "television" ){
+                setopt(["TV"])
+            }
+
+            else if(e.target.value === "f" || e.target.value === "F" || e.target.value === "fri" || e.target.value === "fridge" || e.target.value === "Fridge" ){
+                setopt(["Fridge"])
+            }
+
+            else if(e.target.value === "a" || e.target.value === "air" || e.target.value === "ac" || e.target.value === "AC" || e.target.value === "Air Conditioner" ){
+                setopt(["Air Conditioner"])
+            }
+
+            else if(e.target.value === "k" || e.target.value === "K" || e.target.value === "key" || e.target.value === "keyboard" || e.target.value === "Keyboard" ){
+                setopt(["Keyboard"])
+            }
+
+            else if( e.target.value === "tri" || e.target.value === "trimmer" || e.target.value === "Trimmer" ){
+                setopt(["Trimmer"])
+            }
+            else{
+                setopt([])
+            }
         }
 
 
 
+    }
+
+    const handlesearchbox = (x:string) => {
+        setopt([])
+        openbox(false)
+        if(x === 'Air Conditioner')
+        {
+            router.push(`/search?param=AC`)
+        }
+        else if(x === 'Smartphone'){
+            router.push(`/search?param=Mobile`)
+        }
+
+        else if(x === 'TV'){
+            router.push(`/search?param=Tv`)
+        }
+
+        else if(x === 'Watch'){
+            router.push(`/search?param=Smart Watch`)
+        }
+        else{
+            
+            router.push(`/search?param=${x}`)
+        }
     }
 
 client.query({
@@ -84,7 +181,11 @@ client.query({
             </nav>
             {/* searchbox */}
 
-            <div className={box?"h-[200px] shadow-lg w-[384px] bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+            <div className={box?"min-h-[100px] shadow-lg w-[384px] bg-[white] flex flex-col justify-start items-start fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+            {opt.map((item:string, index:number)=>(
+                 <li onClick={()=>{handlesearchbox(item)}} key={index} className="text-[black] text-[18px] list-none select-none cursor-pointer ml-2 mt-2">{item}</li>
+            ))}
+
             </div>
 
              <h1 className="text-[19px]">Search Results will appear here.</h1> 
@@ -110,7 +211,13 @@ client.query({
     
              {/* searchbox */}
 
-             <div className={box?"h-[200px] w-[384px] shadow-lg bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+             <div className={box?"min-h-[100px] w-[384px] shadow-lg bg-[white] flex flex-col justify-start items-center fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+             
+             {opt.map((item:string, index:number)=>(
+                 <li onClick={()=>{handlesearchbox(item)}} key={index} className="text-[black] text-[18px] list-none select-none cursor-pointer ml-2 mt-2">{item}</li>
+            ))}
+               
+                
             </div>
             
     
@@ -154,7 +261,10 @@ client.query({
 
          {/* searchbox */}
 
-         <div className={box?"h-[200px] shadow-lg w-[384px] bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+         <div className={box?"min-h-[100px] shadow-lg w-[384px] bg-[white] fixed z-40 top-[56px] left-[830px] sm1:left-[30px] sm1:w-[300px]":"hidden"}>
+         {opt.map((item:string, index:number)=>(
+                 <li onClick={()=>{handlesearchbox(item)}} key={index} className="text-[black] text-[18px] list-none select-none cursor-pointer ml-2 mt-2">{item}</li>
+            ))}
             </div>
         
 
