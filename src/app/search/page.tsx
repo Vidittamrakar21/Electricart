@@ -39,17 +39,20 @@ export default function Search (){
     const [data, setdata] = useState([])
     const [box, openbox] = useState(false)
     const [opt, setopt] = useState([""])
+    const [inp, setinp] = useState("")
 //@ts-ignore
     const searchbox = (e)=> {
         if(e.target.value === ""){
             openbox(false)
-           
+            setinp("")
 
         }
         else{
             openbox(true)
+            setinp(e.target.value)
             if(e.target.value === "s" || e.target.value === "S" ){
                 setopt(["Smartphone", "smartwatch", "Speaker" ])
+                
             }
             else if(e.target.value === "smart" || e.target.value === "Smart" ){
                 setopt(["Smartphone", "Smartwatch" ])
@@ -127,6 +130,7 @@ export default function Search (){
     const handlesearchbox = (x:string) => {
         setopt([])
         openbox(false)
+        setinp("")
         if(x === 'Air Conditioner')
         {
             router.push(`/search?param=AC`)
@@ -139,7 +143,7 @@ export default function Search (){
             router.push(`/search?param=Tv`)
         }
 
-        else if(x === 'Watch'){
+        else if(x === 'Watch'|| x === 'watch'){
             router.push(`/search?param=Smart Watch`)
         }
         else{
@@ -175,7 +179,7 @@ client.query({
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
                 </div>
-             <input onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
+             <input value={inp} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
 
     
             </nav>
@@ -205,7 +209,7 @@ client.query({
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
                 </div>
-             <input onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
+             <input value={inp} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
     
             </nav>
     
@@ -255,7 +259,7 @@ client.query({
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
             </div>
-         <input onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
+         <input value={inp} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus = {true} />
 
         </nav>
 
