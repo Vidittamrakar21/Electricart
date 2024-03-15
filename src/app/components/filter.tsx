@@ -175,7 +175,7 @@ export default function Filter (props:propstype) {
         <div className="min-h-[50px]  w-[270px] flex flex-col justify-center items-center">
                 
                {comp.length>0?comp.map((item:string, index:number)=>(
-                <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
+                <div key={index} className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
                 <input type="checkbox" onClick={()=>{!check5?addfilters(`${item}`):""; setcheck5(true);}}  checked={check5}/>
                 <h3 className="ml-2">{item}</h3>
             </div>

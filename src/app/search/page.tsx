@@ -6,7 +6,7 @@ import {useRouter,useSearchParams} from 'next/navigation'
 import { useParams } from "next/navigation"
 import Itemcard from "../components/itemcard"
 import Filter from "../components/filter"
-import { client } from "../page"
+import { client } from "../client"
 import Itemcardskeleton from "../components/itemcardskeleton"
 import { gql, useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"

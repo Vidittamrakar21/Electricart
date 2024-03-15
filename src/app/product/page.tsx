@@ -1,7 +1,7 @@
 "use client"
 import {useRouter, useSearchParams} from 'next/navigation'
 import { useState } from 'react'
-import {client} from "../page"
+import {client} from "../client"
 import { gql} from "@apollo/client"
 
 
@@ -281,7 +281,7 @@ export default function Product () {
 
                 <div className={(data.reviews).length>1?" mb-5 flex flex-col items-start justify-start w-[800px] sm1:w-[320px] min-h-[90px] mt-4 ml-2": "hidden"}>
                        {(data.reviews).length>1? (data.reviews).map((item: reviewtype, index: number)=>(
-                             <div className="flex flex-col items-start justify-start w-[800px] sm1:w-[340px] min-h-[50px] mt-4" >
+                             <div key={index} className="flex flex-col items-start justify-start w-[800px] sm1:w-[340px] min-h-[50px] mt-4" >
                              <div className="w-[40px] h-[20px] bg-[green] text-[white] mt-2 ml-1 text-[12px] flex items-center justify-center rounded-[5px]">
                                    {item.rate} &#9733;
                               </div>
