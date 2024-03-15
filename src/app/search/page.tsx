@@ -9,7 +9,7 @@ import Filter from "../components/filter"
 import { client } from "../page"
 import Itemcardskeleton from "../components/itemcardskeleton"
 import { gql, useQuery } from "@apollo/client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type itemtype = {
     _id: string
@@ -152,6 +152,63 @@ export default function Search (){
         }
     }
 
+    const [comp, setcomp] = useState([""])
+
+    const checkfilter =()=>{
+        if(param === "Laptop"){
+            setcomp(["HP","Lenovo","ASUS", "Apple" ])
+        }
+        else if(param === "Mobile"){
+            setcomp(["REDMI","OnePlus","OPPO", "Apple" ])
+        }
+
+        else if(param === "Headphone"){
+            setcomp(["ZEBRONICS","Mi","boAt"])
+        }
+
+        else if(param === "Tv"){
+            setcomp(["REDMI","SAMSUNG","SONY", "MI" ])
+        }
+        else if(param === "Speaker"){
+            setcomp(["boAt","JBL","ZEBRONICS", "Mivi" ])
+        }
+        else if(param === "Smart Watch"){
+            setcomp(["Fasttrack","Fire-Boltt","Noise", "boAt" ,"SAMSUNG" ])
+
+        }
+
+        else if(param === "Fridge"){
+            setcomp(["SAMSUNG","Godrej","Whirlpool", "Haier" ])
+        }
+
+        else if(param === "Washing Machine"){
+            setcomp(["SAMSUNG","LG" ])
+        }
+
+        else if(param === "AC"){
+            setcomp(["Voltas","Godrej","Whirlpool" ])
+        }
+        else if(param === "Keyboard"){
+            setcomp(["HP","Cosmic Byte","ZEBRONICS", "Keychron" ])
+        }
+        else if(param === "Mouse"){
+            setcomp(["HP","Portronics","ZEBRONICS", "Wings" ])
+        }
+        else if(param === "Trimmer"){
+            setcomp(["PHILIPS","HAVELLS","NOVA" ])
+        }
+
+
+
+
+    }
+
+
+    useEffect(()=>{
+        checkfilter()
+    },[])
+    
+
 client.query({
     query: gql`
 {
@@ -230,7 +287,7 @@ client.query({
             
     
             <div className="flex flex-row justify-center items-start min-h-[900px] w-[100%] relative top-[100px] ">
-                <Filter></Filter>
+                <Filter company={comp}></Filter>
                 <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
 
               <Itemcardskeleton></Itemcardskeleton>
@@ -277,7 +334,7 @@ client.query({
         
 
         <div className="flex flex-row justify-center items-start min-h-[900px] w-[100%] relative top-[100px] ">
-            <Filter></Filter>
+            <Filter company={comp}></Filter>
             <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
             {data.map((item: itemtype, index:number)=>(
                 <Itemcard key={index} id={item._id} title={item.title} spec={item.spec} rating={item.rating} price={item.price} image={item.image}></Itemcard>

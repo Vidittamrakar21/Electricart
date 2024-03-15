@@ -1,8 +1,13 @@
 import { set } from "firebase/database";
 import { EventHandler, useState } from "react"
 
-export default function Filter () {
+type propstype = {
+    company: string[]
+}
 
+export default function Filter (props:propstype) {
+
+    const comp = props.company;
     const [range, setrange] = useState(0)
     const [price, setprice] = useState(500)
     const [filter, openfilter] = useState(false)
@@ -168,22 +173,13 @@ export default function Filter () {
 
         <h1 className="mt-2 ml-4">Brands</h1>
         <div className="min-h-[50px]  w-[270px] flex flex-col justify-center items-center">
+                
+               {comp.length>0?comp.map((item:string, index:number)=>(
                 <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                    <input type="checkbox" onClick={()=>{!check5?addfilters('Apple'):""; setcheck5(true);}}  checked={check5}/>
-                    <h3 className="ml-2">Apple</h3>
-                </div>
-                <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check6?addfilters('Asus'):""; setcheck6(true);}} checked={check6}/>
-                    <h3 className="ml-2">Asus</h3>
-                </div>
-                <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check7?addfilters('Hp'):""; setcheck7(true);}} checked={check7}/>
-                    <h3 className="ml-2">Hp</h3>
-                </div>
-                <div className="h-[40px] ml-4 w-[250px] flex flex-row justify-start  items-center">
-                    <input type="checkbox" onClick={()=>{!check8?addfilters('Lenevo'):""; setcheck8(true);}} checked={check8}/>
-                    <h3 className="ml-2">Lenovo</h3>
-                </div>
+                <input type="checkbox" onClick={()=>{!check5?addfilters(`${item}`):""; setcheck5(true);}}  checked={check5}/>
+                <h3 className="ml-2">{item}</h3>
+            </div>
+               )):<></>}
         </div>
 
         <h1 className="mt-2 ml-4">Offers</h1>
