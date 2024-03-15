@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Signpage from "./components/sign/sign";
-import Navbar from "./components/nav";
-import Footer from "./components/footer";
+
+import Navbar from "../components/nav";
+import Footer from "../components/footer";
 import { ApolloClient ,InMemoryCache , ApolloProvider} from "@apollo/client";
 
 const client = new ApolloClient({
@@ -31,7 +31,7 @@ export default function RootLayout({
       
          
            {children}
-           {/* <Signpage></Signpage> */}
+       
             <Navbar></Navbar>
 
             <Footer></Footer>

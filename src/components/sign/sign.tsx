@@ -5,7 +5,7 @@ import './sign.css'
 import React from 'react';
 import { useState,useContext,useRef} from 'react';
 import { EcoContext } from '@/context/contextapi';
-import {auth} from "../../firebase"
+import {auth} from "../../app/firebase"
 import {signInWithPopup , GoogleAuthProvider} from "firebase/auth"
 
 

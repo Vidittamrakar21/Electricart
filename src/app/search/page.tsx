@@ -1,13 +1,13 @@
 "use client"
 
-import Footer from "../components/footer"
+import Footer from "../..//components/footer"
 import {useRouter,useSearchParams} from 'next/navigation'
 
 import { useParams } from "next/navigation"
-import Itemcard from "../components/itemcard"
-import Filter from "../components/filter"
+import Itemcard from "../../components/itemcard"
+import Filter from "../../components/filter"
 import { client } from "../client"
-import Itemcardskeleton from "../components/itemcardskeleton"
+import Itemcardskeleton from "../../components/itemcardskeleton"
 import { gql, useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
 
