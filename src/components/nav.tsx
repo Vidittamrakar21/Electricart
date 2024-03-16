@@ -15,7 +15,7 @@ export default function Navbar (){
   } 
 
   const opensearch = () => {
-    router.push('/search')
+    router.push('/mysearch/search')
   }
 
   const openhome = () => {

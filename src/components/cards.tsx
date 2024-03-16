@@ -13,18 +13,18 @@ export default function Card (props: productype ) {
     const handleclick = () => {
         if(props.item === 'Air Conditioner')
         {
-            router.push(`/search?param=AC`)
+            router.push(`/mysearch/search?param=AC`)
         }
         else if(props.item === 'Smartphone'){
-            router.push(`/search?param=Mobile`)
+            router.push(`/mysearch/search?param=Mobile`)
         }
 
         else if(props.item === 'TV'){
-            router.push(`/search?param=Tv`)
+            router.push(`/mysearch/search?param=Tv`)
         }
         else{
             
-            router.push(`/search?param=${props.item}`)
+            router.push(`/mysearch/search?param=${props.item}`)
         }
     }
 

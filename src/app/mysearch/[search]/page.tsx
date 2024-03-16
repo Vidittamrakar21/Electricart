@@ -1,13 +1,13 @@
 "use client"
 
-import Footer from "../..//components/footer"
+import Footer from "../../../components/footer"
 import {useRouter,useSearchParams} from 'next/navigation'
 
 import { useParams } from "next/navigation"
-import Itemcard from "../../components/itemcard"
-import Filter from "../../components/filter"
-import { client } from "../client"
-import Itemcardskeleton from "../../components/itemcardskeleton"
+import Itemcard from "../../../components/itemcard"
+import Filter from "../../../components/filter"
+import { client } from "../../client"
+import Itemcardskeleton from "../../../components/itemcardskeleton"
 import { gql, useQuery } from "@apollo/client"
 import { useEffect, useState } from "react"
 
@@ -133,22 +133,22 @@ export default function Search (){
         setinp("")
         if(x === 'Air Conditioner')
         {
-            router.push(`/search?param=AC`)
+            router.push(`/mysearch/search?param=AC`)
         }
         else if(x === 'Smartphone'){
-            router.push(`/search?param=Mobile`)
+            router.push(`/mysearch/search?param=Mobile`)
         }
 
         else if(x === 'TV'){
-            router.push(`/search?param=Tv`)
+            router.push(`/mysearch/search?param=Tv`)
         }
 
         else if(x === 'Watch'|| x === 'watch'){
-            router.push(`/search?param=Smart Watch`)
+            router.push(`/mysearch/search?param=Smart Watch`)
         }
         else{
             
-            router.push(`/search?param=${x}`)
+            router.push(`/mysearch/search?param=${x}`)
         }
     }
 

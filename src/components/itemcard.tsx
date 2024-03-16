@@ -15,7 +15,7 @@ export  default function Itemcard (props: itemtype) {
     const router = useRouter()
 
     const handleroute = () =>{
-            router.push(`/product?id=${props.id}`)
+            router.push(`/products/product?id=${props.id}`)
             
     }
 

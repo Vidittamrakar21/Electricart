@@ -1,7 +1,7 @@
 "use client"
 import {useRouter, useSearchParams} from 'next/navigation'
 import { useState } from 'react'
-import {client} from "../client"
+import {client} from "../../client"
 import { gql} from "@apollo/client"
 
 
