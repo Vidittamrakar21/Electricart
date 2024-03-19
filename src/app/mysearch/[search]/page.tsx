@@ -9,7 +9,7 @@ import Filter from "../../../components/filter"
 import { client } from "../../client"
 import Itemcardskeleton from "../../../components/itemcardskeleton"
 import { gql, useQuery } from "@apollo/client"
-import { useEffect, useState } from "react"
+import { useEffect, useState ,useRef, MutableRefObject} from "react"
 
 type itemtype = {
     _id: string
@@ -22,6 +22,8 @@ type itemtype = {
 }
 
 export default function Search (){
+
+    const input = useRef<HTMLInputElement>(null);
 
     
     const router = useRouter()
@@ -200,13 +202,119 @@ export default function Search (){
         }
 
 
+    }
 
+    const [isproduct, setproduct] = useState(true)
+ 
+
+    const searchresult = ()=>{
+     
+        let str = (input?.current?.value)
+       
+            
+        str = str?.toLowerCase();
+        
+        
+       
+        if(str === ""){
+
+            return
+        }
+
+       else if(str === "laptop"){
+            router.push(`/mysearch/search?param=Laptop`)
+            openbox(false);
+            setinp("")
+        }
+        else if(str === "mobile"){
+            router.push(`/mysearch/search?param=Mobile`)
+            openbox(false);
+            setinp("")
+        }
+
+        else if(str === "headphone"){
+            router.push(`/mysearch/search?param=Headphone`)
+            openbox(false);
+            setinp("")
+        }
+
+        else if(str === "tv"){
+            router.push(`/mysearch/search?param=Tv`)
+            openbox(false);
+            setinp("")
+        }
+
+        else if(str === "speaker"){
+            router.push(`/mysearch/search?param=Speaker`)
+            openbox(false);
+            setinp("")
+
+        }
+
+        else if(str === "smart watch"){
+            router.push(`/mysearch/search?param=Smart Watch`)
+            openbox(false);
+            setinp("")
+
+        }
+
+        else if(str === "fridge"){
+            router.push(`/mysearch/search?param=Fridge`)
+            openbox(false);
+            setinp("")
+
+        }
+
+        else if(str === "washing machine"){
+            router.push(`/mysearch/search?param=Washing Machine`)
+            openbox(false);
+            setinp("")
+
+        }
+
+        else if(str === "ac"){
+            router.push(`/mysearch/search?param=AC`)
+            openbox(false);
+            setinp("")
+        }
+        else if(str === "keyboard"){
+            router.push(`/mysearch/search?param=Keyboard`)
+            openbox(false);
+            setinp("")
+            
+        }
+        else if(str === "mouse"){
+            router.push(`/mysearch/search?param=Mouse`)
+            openbox(false);
+            setinp("")
+        }
+        else if(str === "trimmer"){
+            router.push(`/mysearch/search?param=Trimmer`)
+            openbox(false);
+            setinp("")
+           
+        }
+
+        else{
+            setproduct(false);
+            openbox(false);
+            setdata([]);
+            router.push(`/mysearch/search`)
+            
+        }
+    
 
     }
 
 
     useEffect(()=>{
         checkfilter()
+        document.addEventListener("keydown",(e)=>{
+            if(e.key === 'Enter'){
+             
+                searchresult()
+            }
+        })
     },[])
     
 
@@ -237,7 +345,7 @@ client.query({
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
                 </div>
-             <input value={inp} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus={true} />
+             <input value={inp} ref={input} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " autoFocus={true} />
 
     
             </nav>
@@ -250,7 +358,8 @@ client.query({
 
             </div>
 
-             <h1 className="text-[19px]">Search Results will appear here.</h1> 
+             <h1 className={isproduct?"text-[19px]":"hidden"}>Search Results will appear here.</h1> 
+             <h1 className={!isproduct?"text-[19px]":"hidden"}>No Product Found !</h1> 
 
             </div>
         )
@@ -268,7 +377,7 @@ client.query({
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                 </svg>
                 </div>
-             <input value={inp} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " />
+             <input value={inp} ref={input} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 " />
     
             </nav>
     
@@ -318,7 +427,7 @@ client.query({
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
             </div>
-         <input value={inp} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 "  />
+         <input value={inp} ref={input} onChange={searchbox} type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:w-80 "  />
 
         </nav>
 
