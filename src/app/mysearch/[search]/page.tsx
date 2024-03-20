@@ -214,7 +214,7 @@ export default function Search (){
             
         str = str?.toLowerCase();
         
-        
+        setdata([])
        
         if(str === ""){
 

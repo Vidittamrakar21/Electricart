@@ -9,7 +9,9 @@ export default function Front (){
         <div className="flex items-center justify-start flex-col">
            
             <Corousel></Corousel>
+           
             <Container></Container>
+
             <h1 className="text-[19px] font-[500] relative right-[700px] sm1:right-[80px]">Recently Viewed</h1>
             <Recently></Recently>
         </div>
