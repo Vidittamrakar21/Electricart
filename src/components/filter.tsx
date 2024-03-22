@@ -116,7 +116,7 @@ export default function Filter (props:propstype) {
 
   return(
       <>
-        <div onClick={handlefilter} className="hidden sm1:cursor-point sm1:select-none sm1:flex sm1:items-center sm1:justify-center sm1:h-[45px] sm1:z-20 sm1:w-[100%] sm1:bg-[white] sm1:fixed sm1:top-[50px] sm1:z-29">
+        <div onClick={handlefilter} className="hidden sm1:cursor-point sm1:select-none sm1:flex sm1:items-center sm1:justify-center sm1:h-[45px] sm1:z-20 sm1:w-[100%] sm1:bg-[white] sm1:fixed sm1:top-[50px] sm1:z-29 sm1:border-b-[1px] border-b-[#b6b6b6bd]">
             Add Filters
         </div>
 
