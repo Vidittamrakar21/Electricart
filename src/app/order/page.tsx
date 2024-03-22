@@ -125,11 +125,11 @@ export default function Order () {
                 </div>
                                 <h1 className="text-[18px] text-[black] font-[500] mt-5 ml-4">Rate This Product</h1>
                                 <div className="text-[40px] h-[45px] w-[380px] sm1:w-[320px] mt-3 flex flex-row justify-evenly items-center text-[#bbbbbb] select-none cursor-pointer">
-                                        <div className={star1 === true ? "text-[#f3f351]":""} onClick={handlestar1}>&#9733;</div>
-                                        <div className={star2 === true ? "text-[#f3f351]":""} onClick={handlestar2}>&#9733;</div>
-                                        <div className={star3 === true ? "text-[#f3f351]":""} onClick={handlestar3}>&#9733;</div>
-                                        <div className={star4 === true ? "text-[#f3f351]":""} onClick={handlestar4}>&#9733;</div>
-                                        <div className={star5 === true ? "text-[#f3f351]":""} onClick={handlestar5}>&#9733;</div>
+                                        <div className={star1 === true ? "text-[#ffd13c]":""} onClick={handlestar1}>&#9733;</div>
+                                        <div className={star2 === true ? "text-[#ffd13c]":""} onClick={handlestar2}>&#9733;</div>
+                                        <div className={star3 === true ? "text-[#ffd13c]":""} onClick={handlestar3}>&#9733;</div>
+                                        <div className={star4 === true ? "text-[#ffd13c]":""} onClick={handlestar4}>&#9733;</div>
+                                        <div className={star5 === true ? "text-[#ffd13c]":""} onClick={handlestar5}>&#9733;</div>
                                 </div>
                                 <h1 className="text-[18px] text-[black] font-[500] mt-5 ml-4">Review This Product</h1>
                                 <textarea className=" sm1:w-[320px] mt-5 ml-5 sm1:ml-2 resize-none border border-[#a8a8a8] rounded-[8px]" placeholder="&nbsp; &nbsp; Description"  cols={33} rows={10}></textarea>
