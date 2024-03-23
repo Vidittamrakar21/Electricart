@@ -6,12 +6,12 @@ import {getAuth} from "firebase/auth"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBaXymKBhlpjw6aAfR_kO5Vkx088YTBp7U",
-  authDomain: "projectyle-2eaf4.firebaseapp.com",
-  projectId: "projectyle-2eaf4",
-  storageBucket: "projectyle-2eaf4.appspot.com",
-  messagingSenderId: "647878359343",
-  appId: "1:647878359343:web:1dedb0a81359c8937009da"
+  apiKey: "AIzaSyCcSPCdIN8id4eWC_y6frMEHe7kgCVwtQs",
+  authDomain: "electricart-dd265.firebaseapp.com",
+  projectId: "electricart-dd265",
+  storageBucket: "electricart-dd265.appspot.com",
+  messagingSenderId: "444310540861",
+  appId: "1:444310540861:web:b2179172da3f5e9c735054"
 };
 
 // Initialize Firebase

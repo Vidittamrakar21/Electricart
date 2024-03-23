@@ -7,11 +7,25 @@ import { useState,useContext,useRef} from 'react';
 import { EcoContext } from '@/context/contextapi';
 import {auth} from "../../app/firebase"
 import {signInWithPopup , GoogleAuthProvider} from "firebase/auth"
-
+import { gql, useMutation } from '@apollo/client';
 
 // import { cookies } from 'next/headers'
 
- 
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+const gqclient = new ApolloClient({
+  uri: 'http://localhost:8000/graphql',
+  cache: new InMemoryCache(),
+});
+
+
+const CREATE_USER = gql`
+mutation Mutation($name: String, $email: String) {
+    createuser(name: $name, email: $email)
+
+    
+  }
+`
 
 
 
@@ -24,8 +38,9 @@ function Signpage (){
 
     const googleAuth = new GoogleAuthProvider();
 
+    const [createPost, { loading, error }] = useMutation(CREATE_USER);
 
-
+    
 
     const handleclick = () =>{
         show(true);
@@ -51,9 +66,16 @@ function Signpage (){
   
     const signwithgoogle= async ()=>{
        const result  =  await signInWithPopup(auth, googleAuth);
-       console.log(result);
-       //@ts-ignore
-       console.log(result._tokenResponse.refreshToken);
+    //    console.log(result);
+    //    //@ts-ignore
+    //    console.log(result._tokenResponse.refreshToken);
+
+       if(result.user.emailVerified === true){
+        console.log("user")
+        //@ts-ignore
+        const { data } = await createPost({ variables: { name: result.user.displayName, email: result.user.email } });
+        console.log('Created user:', data.createuser);
+       }
        
        
     }
