@@ -6,12 +6,12 @@ import Navbar from "../components/nav";
 import { Ecoprovider } from "@/context/contextapi";
 import {  ApolloProvider} from "@apollo/client";
 
-import {client} from './client'
+
 
 export default function Home() {
   return (
     <main>
-      <ApolloProvider client={client}>
+    
 
       <Ecoprovider>
     
@@ -19,7 +19,7 @@ export default function Home() {
 
       </Ecoprovider>
 
-      </ApolloProvider>
+     
      </main>
   );
 }

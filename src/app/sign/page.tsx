@@ -3,19 +3,21 @@
 
 import './sign.css'
 import React from 'react';
-import { useState,useContext,useRef} from 'react';
+import { useState,useContext,useRef, CSSProperties} from 'react';
 import { EcoContext } from '@/context/contextapi';
 import {auth} from "../../app/firebase"
 import {signInWithPopup , GoogleAuthProvider} from "firebase/auth"
 import {useRouter} from 'next/navigation'
+import ClipLoader from "react-spinners/ClipLoader";
 
-import { gql, useMutation } from '@apollo/client';
+import { gql} from '@apollo/client';
 // import { cookies } from 'next/headers'
 
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import Cookies from 'js-cookie'
 
 const gqclient = new ApolloClient({
-  uri: 'http://localhost:8000/graphql',
+  uri: 'https://electricart-order-server.vercel.app/graphql',
   cache: new InMemoryCache(),
 });
 
@@ -39,11 +41,15 @@ function Signpage (){
    
     const [but , show] = useState(false)
     const [sign , showsign] = useState(true)
-    const [createPost, { loading, error }] = useMutation(CREATE_USER);
+    const [load , makeload] = useState(false)
+
+    const override: CSSProperties = {
+        position: "absolute",
+        top: "490px"
+      };
+      
 
     const googleAuth = new GoogleAuthProvider();
-
-
 
 
     const handleclick = () =>{
@@ -69,14 +75,37 @@ function Signpage (){
 
   
     const signwithgoogle= async ()=>{
+        makeload(true)
        const result  =  await signInWithPopup(auth, googleAuth);
        
 
-       if(result.user.emailVerified === true){
-        console.log("user")
-        //@ts-ignore
-        const { data } = await createPost({ variables: { name: result.user.displayName, email: result.user.email } });
-        console.log('Created user:', data.createuser);
+       if(result.user.emailVerified === true && result.user.refreshToken){
+
+      await  gqclient.mutate({
+            mutation: CREATE_USER,
+            variables: {
+                name: result.user.displayName,
+                email: result.user.email
+            }
+            
+        }).then((apiresult:any)=>{
+            if(apiresult.data.createuser){
+                makeload(false);
+                router.push('/')
+                
+                Cookies.set('RF_TOKEN', result.user.refreshToken)
+                
+            }
+            else{
+                alert("Unable to login.")
+            }
+            
+          
+        })
+
+        
+
+     
        }
        
        
@@ -116,13 +145,15 @@ function Signpage (){
 
                 {/* <div className="coon" onClick={openemail}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="grey" viewBox="0 0 16 16">
-                 <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+                 <path d="M0 4a2 2 0 0true 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
                  </svg>
 
                  <h4>Continue with Email</h4>
                 </div> */}
                 
                 <h5 id='terms'>I agree to the <span>Terms & Conditions</span> & <span>Privacy Policy</span></h5>
+
+                <ClipLoader color="#36d7b7" loading={load} cssOverride={override}/>
 
                 <div id='sgbox'>
 
