@@ -16,7 +16,7 @@ import { gql} from '@apollo/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import Cookies from 'js-cookie'
 
-const gqclient = new ApolloClient({
+export const gqclient = new ApolloClient({
   uri: 'https://electricart-order-server.vercel.app/graphql',
   cache: new InMemoryCache(),
 });
@@ -91,9 +91,9 @@ function Signpage (){
         }).then((apiresult:any)=>{
             if(apiresult.data.createuser){
                 makeload(false);
-                router.push('/')
+                Cookies.set('RF_TOKEN', apiresult.data.createuser)
                 
-                Cookies.set('RF_TOKEN', result.user.refreshToken)
+                router.push('/')
                 
             }
             else{
