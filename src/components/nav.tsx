@@ -64,13 +64,15 @@ const [udata, setudata] = useState<usertok>()
   const validateuser = async ()=> {
     console.log("inside func")
     const cook = Cookies.get('RF_TOKEN')
-   await gqclient.mutate({
-      mutation: CREATE_USER,
-      variables: {
-        token: cook
-      }
-      //@ts-ignore
-    }).then((res)=>{setudata(res.data.checkuser)})
+    if(cook){
+      await gqclient.mutate({
+        mutation: CREATE_USER,
+        variables: {
+          token: cook
+        }
+        //@ts-ignore
+      }).then((res)=>{setudata(res.data.checkuser)})
+    }
   }
 
 
