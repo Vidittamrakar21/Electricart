@@ -2,7 +2,7 @@
 "use client"
 
 import './sign.css'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState,useContext,useRef, CSSProperties} from 'react';
 import { EcoContext } from '@/context/contextapi';
 import {auth} from "../../app/firebase"
@@ -21,6 +21,7 @@ export const gqclient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+//'https://electricart-order-server.vercel.app/graphql'
 
 const CREATE_USER = gql`
 mutation Mutation($name: String, $email: String) {
@@ -30,7 +31,34 @@ mutation Mutation($name: String, $email: String) {
   }
 `
 
- 
+const MAKE_USER = gql`
+mutation Mutation($token: String) {
+    checkuser(token: $token){
+      data {
+        name
+        email
+        id
+        iat
+        exp
+      }
+      accesstoken
+    }
+
+    
+  }
+`
+const CHECK_USER = gql`
+mutation Mutation($token: String) {
+  giveaccess(token: $token){
+    name
+    email 
+    id
+
+  }
+
+    
+  }
+`
 
 
 
@@ -73,6 +101,10 @@ function Signpage (){
        data?.openlog(false)
     }
 
+    const sendfu = ()=>{
+        window.location.reload()
+        router.push('/')
+    }
   
     const signwithgoogle= async ()=>{
         makeload(true)
@@ -88,12 +120,53 @@ function Signpage (){
                 email: result.user.email
             }
             
-        }).then((apiresult:any)=>{
+        }).then(async (apiresult:any)=>{
             if(apiresult.data.createuser){
                 makeload(false);
-                Cookies.set('RF_TOKEN', apiresult.data.createuser)
-                
-                router.push('/')
+                Cookies.set('AC_TOKEN', apiresult.data.createuser)
+                const cook = Cookies.get('AC_TOKEN')
+                const rfcook = Cookies.get('RF_TOKEN')
+                if(cook && (!rfcook)){
+                  
+                  await gqclient.mutate({
+                    mutation: MAKE_USER,
+                    variables: {
+                      token: cook
+                    }
+                    //@ts-ignore
+                  }).then(async (res)=>{
+                    // console.log((res.data.checkuser).accesstoken)
+                    if(res.data.checkuser){
+                      console.log(res.data.checkuser)
+                      await gqclient.mutate({
+                        mutation: CHECK_USER,
+                        variables: {
+                          token: (res.data.checkuser).accesstoken
+                        }
+            
+                      }).then(async (acc)=>{
+                        console.log(acc.data.giveaccess)
+                        if((acc.data.giveaccess).email === (res.data.checkuser).data.email){
+                        
+                          Cookies.set('RF_TOKEN',(res.data.checkuser).accesstoken,{expires: 7})
+                          Cookies.set('name',(acc.data.giveaccess).name )
+                          
+                        
+                            router.push('/')
+                         
+                          
+                        } 
+                      })
+                  
+                    }
+                  })
+                }
+            
+                // else if(cook && rfcook){
+                //  const name = Cookies.get('name')
+                 
+                // }
+               
                 
             }
             else{
@@ -110,6 +183,8 @@ function Signpage (){
        
        
     }
+
+    
 
     const mail = useRef();
     const pass = useRef();

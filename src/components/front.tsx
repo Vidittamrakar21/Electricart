@@ -6,6 +6,7 @@ import { useEffect,useState } from "react"
 import { gqclient } from "@/app/sign/page"
 import { gql} from '@apollo/client';
 import Cookies from 'js-cookie'
+import { reload } from "firebase/auth"
 
 const CREATE_USER = gql`
 mutation Mutation($token: String) {
@@ -30,16 +31,21 @@ export default function Front (){
       const validateuser = async ()=> {
         console.log("inside func")
         const cook = Cookies.get('RF_TOKEN')
-       await gqclient.mutate({
-          mutation: CREATE_USER,
-          variables: {
-            token: cook
-          }
-        }).then((res)=>{console.log(res)})
+        const accook = Cookies.get('AC_TOKEN')
+        if(cook && accook){
+          Cookies.remove('AC_TOKEN')
+          window.location.reload()
+
+        }
       }
     
       useEffect(()=>{
-        // validateuser()
+      
+  
+          validateuser()
+          
+        
+        
       },[])
     return(
         <div className="flex items-center justify-start flex-col">
