@@ -52,7 +52,7 @@ export default function Recently (props: propstype) {
      <div className=" h-[370px] w-[1600px] bg-[white] mt-8 flex flex-row flex-wrap justify-start items-center mb-8 select-none sm1:w-[340px] sm1:overflow-x-scroll sm1:flex-nowrap sm1:justify-start sm1:h-[280px] sm1:mt-2">
        
         {(props.data).map((item, index)=>(
-            <Recentcard id={item}></Recentcard>
+            <Recentcard id={item} key={index}></Recentcard>
         ))}         
        
     </div>
