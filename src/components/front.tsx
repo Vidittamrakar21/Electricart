@@ -6,7 +6,19 @@ import { useEffect,useState } from "react"
 import { gqclient } from "@/app/sign/page"
 import { gql} from '@apollo/client';
 import Cookies from 'js-cookie'
-import { reload } from "firebase/auth"
+
+
+const finduser = gql`
+mutation Mutation($uid: String) {
+    findoneuser(uid: $uid) {
+      
+      recently
+      
+    }
+  }
+
+`
+
 
 const CREATE_USER = gql`
 mutation Mutation($token: String) {
@@ -38,12 +50,38 @@ export default function Front (){
 
         }
       }
+
+      const [arr,setarr] = useState([])
+
+const findone = async ()=>{
+    const id  = Cookies.get('uid');
+    if(id){
+        gqclient.mutate({
+            mutation: finduser,
+            variables: {
+                uid: id
+            }
+        }).then((res)=> {
+          let arra: Array<string> = []
+          let count = 0;
+          for (let index = (res.data.findoneuser.recently).length - 1; index >=0; index--) {
+            arra[count] = (res.data.findoneuser.recently)[index]
+            count ++
+          }
+          //@ts-ignore
+          setarr(arra)
+        
+        })
+    }
+}
+
+
     
       useEffect(()=>{
       
   
           validateuser()
-          
+          findone();
         
         
       },[])
@@ -54,8 +92,8 @@ export default function Front (){
            
             <Container></Container>
 
-            <h1 className="text-[19px] font-[500] relative right-[700px] sm1:right-[80px]">Recently Viewed</h1>
-            <Recently></Recently>
+            {arr.length> 0 ? <><h1 className="text-[19px] font-[500] relative right-[700px] sm1:right-[80px]">Recently Viewed</h1>
+            <Recently data = {arr}></Recently></>: <></>}
         </div>
     )
 }

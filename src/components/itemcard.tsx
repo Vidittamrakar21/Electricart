@@ -1,4 +1,12 @@
 import {useRouter} from 'next/navigation'
+import { gql } from '@apollo/client'
+import { gqclient } from '@/app/sign/page'
+import Cookies from 'js-cookie'
+const updaterecentview = gql`
+mutation Mutation($uid: String, $pid: String) {
+    recentpost(uid: $uid, pid: $pid)
+  }
+`
 
 type itemtype = {
     id: string
@@ -14,8 +22,26 @@ export  default function Itemcard (props: itemtype) {
 
     const router = useRouter()
 
-    const handleroute = () =>{
+    const handleroute = async () =>{
+          const iid = Cookies.get('uid')
+          if(iid){
+
+            await gqclient.mutate({
+              mutation: updaterecentview,
+              variables: {
+                uid: iid,
+                pid: props.id
+              }
+            }).then(()=>{
+              router.push(`/products/product?id=${props.id}`)
+              
+            })
+          }
+          
+          else{
             router.push(`/products/product?id=${props.id}`)
+
+          }
             
     }
 

@@ -150,6 +150,7 @@ function Signpage (){
                         
                           Cookies.set('RF_TOKEN',(res.data.checkuser).accesstoken,{expires: 7})
                           Cookies.set('name',(acc.data.giveaccess).name )
+                          Cookies.set('uid',(acc.data.giveaccess).id )
                           
                         
                             router.push('/')
