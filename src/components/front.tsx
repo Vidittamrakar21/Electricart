@@ -6,7 +6,7 @@ import { useEffect,useState } from "react"
 import { gqclient } from "@/app/sign/page"
 import { gql} from '@apollo/client';
 import Cookies from 'js-cookie'
-
+import Recentskeleton from "./recentskeleton"
 
 const finduser = gql`
 mutation Mutation($uid: String) {

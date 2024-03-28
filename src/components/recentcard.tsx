@@ -2,6 +2,7 @@ import {useRouter} from 'next/navigation'
 import { client } from '@/app/client';
 import { useState } from 'react';
 import { gql } from '@apollo/client';
+import Recentskeleton from './recentskeleton';
 
 type propstype = {
     id: string
@@ -68,6 +69,13 @@ export default function Recentcard (props: propstype){
           }
       }
       };
+
+      //@ts-ignore
+      if(!data){
+       return(
+        <Recentskeleton></Recentskeleton>
+       )
+      }
 
     return(
         <>

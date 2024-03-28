@@ -1,9 +1,40 @@
 "use client"
 
-import { use, useState } from "react"
+import {  useState , useRef, useEffect} from "react"
+import { gql } from "@apollo/client";
+import { gqclient } from "../sign/page";
+import Cookies from "js-cookie";
+import { it } from "node:test";
+
+const UP_ADD = gql`
+
+mutation Mutation($add: String, $uid: String) {
+    putadd(add: $add, uid: $uid)
+  }
+
+`
+
+const finduser = gql`
+mutation Mutation($uid: String) {
+    findoneuser(uid: $uid) {
+      
+      address
+      
+    }
+  }
+
+`
 
 export default function Checkout() {
 
+    const name = useRef<HTMLInputElement>(null)
+    const mobile = useRef<HTMLInputElement>(null)
+    const pincode = useRef<HTMLInputElement>(null)
+    const local = useRef<HTMLInputElement>(null)
+    const area = useRef<HTMLTextAreaElement>(null)
+    const city = useRef<HTMLInputElement>(null)
+    const state = useRef<HTMLSelectElement>(null)
+    
 
     const [itemcount , setcount ] = useState(1);
 
@@ -48,6 +79,109 @@ export default function Checkout() {
        
     }
 
+    type addtype =  {
+        name: string
+        mobile: number
+        pincode: number
+        local: string
+        area: string
+        city: string
+        state: string
+    }
+
+    const updateadd  = async (e: any) =>{
+       
+
+        if(!(name.current?.value && mobile.current?.value && pincode.current?.value && local.current?.value && area.current?.value && city.current?.value && state.current?.value)){
+            alert("All the fields are required")
+        }
+
+        else{
+            let obj = {
+                name: name.current?.value,
+                mobile: mobile.current?.value,
+                pincode: pincode.current?.value,
+                local: local.current?.value,
+                area: area.current?.value,
+                city: city.current?.value ,
+                state: state.current?.value
+            }
+
+            const data = JSON.stringify(obj);
+
+            if(data){
+                const id = Cookies.get('uid')
+                gqclient.mutate({
+                  mutation: UP_ADD,
+                   variables: {
+                   uid: id,
+                    add: data
+                }
+             }).then((res)=>{
+                if((res.data.putadd) === "updated"){
+
+                    isadbox(false)
+                    //@ts-ignore
+                    name.current.value = ""
+                    //@ts-ignore
+                    mobile.current.value = ""
+                    //@ts-ignore
+                    pincode.current.value = ""
+                    //@ts-ignore
+                    local.current.value = ""
+                    //@ts-ignore
+                    area.current.value = ""
+                    //@ts-ignore
+                    city.current.value  = ""
+                    //@ts-ignore
+                    state.current.value = ""
+                    fetchaddress()
+                }
+             })
+            }
+        }
+
+        
+    }
+
+    const [adds, setadds] = useState([])
+    const [arr, setarr] = useState([])
+
+    const fetchaddress = async ()=>{
+        const id = Cookies.get('uid')
+        
+        gqclient.mutate({
+            mutation: finduser,
+            variables:{
+                uid: id
+            }
+        }).then(async (res)=>{
+            //@ts-ignore
+            const updatedItems = [];
+            
+            (res.data.findoneuser.address).map((item:string)=>{
+              //@ts-ignore
+                    
+              updatedItems.push(JSON.parse(item))
+            })
+            //@ts-ignore
+            setarr(updatedItems)
+           
+        })
+
+
+    }
+
+    function ty (){
+      
+        console.log(arr)
+    }
+    
+    useEffect(()=>{
+        fetchaddress()
+      
+    },[])
+
     return (
         <div className="min-h-[650px] flex flex-col justify-start items-center select-none">
 
@@ -65,18 +199,22 @@ export default function Checkout() {
                 <div className="w-[800px] min-h-[270px] flex flex-col justify-center items-start bg-[white] mr-[350px] sm1:w-[340px] sm1:mr-[0px] sm1:mt-[50px]">
 
                     <div className="min-h-[100px] w-[800px] flex flex-col justify-start items-start bg-[white] sm1:w-[340px]">
-                            <div className="h-[40px] w-[800px] flex flex-col justify-center items-start bg-[#4C3F91] text-[white] sm1:w-[340px]">
+                            <div onClick={ty} className="h-[40px] w-[800px] flex flex-col justify-center items-start bg-[#4C3F91] text-[white] sm1:w-[340px]">
                                 <h1 className="ml-2">Delivery Address</h1>
+          
                             </div>
 
-                            <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 h-[65px] w-[750px] sm1:w-[300px]">
-                                      <input type="radio" />
-                                      <div className=" ml-3 flex flex-col justify-start items-start cursor-pointer   h-[55px] w-[550px] sm1:w-[290px]">
-                                                <h1 className="font-[500]">Vidit Tamrakar &nbsp; &nbsp;  &nbsp;  &nbsp;  &nbsp;          9535884359</h1>
-                                                <h2 className="">1899 , Ram Nagar, Bhopal , Madhyapradesh  &nbsp;  <span className="font-[500]">-415006</span></h2>
-                                      </div>
+                          {arr.map((item: addtype, index : number)=>(
+                              <div key={index} className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 min-h-[65px] w-[750px] sm1:w-[300px] border-b-[1px] border-b-[#a8a8a8]">
+                              <input type="radio" checked={arr.length === 1?true:(arr.length)-1 === index? true : false} />
+                              <div className=" ml-3 flex flex-col justify-start items-start cursor-pointer   min-h-[55px] w-[550px] sm1:w-[290px]">
+                                        <h1 className="font-[500]">{item.name} &nbsp; &nbsp;  &nbsp;  &nbsp;  &nbsp;          {item.mobile}</h1>
+                                        <h2 className="">{item.area},{item.local}, {item.city}, {item.state}  &nbsp;  <span className="font-[500]">-{item.pincode}</span></h2>
+                              </div>
+                             
 
-                                </div>
+                            </div>
+                          ))}
 
                             <div onClick={showadbox} className=" mt-4 flex flex-row justify-start items-center cursor-pointer  border h-[45px] w-[800px] sm1:w-[340px]">
                             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#4C3F91"  viewBox="0 0 16 16">
@@ -87,55 +225,55 @@ export default function Checkout() {
 
                             <div className={adbox?"flex flex-col justify-start items-start cursor-pointer h-[405px] w-[800px] sm1:w-[340px] sm1:h-[500px]":"hidden"}>
                                 <div className="flex flex-row justify-start items-center cursor-pointer   h-[65px] w-[750px] sm1:w-[300px] sm1:flex-col sm1:h-[95px]">
-                                        <input type="text" placeholder="&nbsp; &nbsp;Enter Name" className="h-[45px] sm1:w-[270px]  w-[350px] border-[1.5px] sm1:mt-2 border-[#b1b1b1] ml-2 sm1:h-[35px]"/>
-                                        <input type="number" placeholder="&nbsp;&nbsp;10-Digit Mobile Number" className="h-[45px]  sm1:w-[270px] sm1:mt-2 border-[1.5px] border-[#b1b1b1] w-[350px] ml-2 sm1:h-[35px]"/>
+                                        <input ref={name} type="text" placeholder="&nbsp; &nbsp;Enter Name" className="h-[45px] sm1:w-[270px]  w-[350px] border-[1.5px] sm1:mt-2 border-[#b1b1b1] ml-2 sm1:h-[35px]"/>
+                                        <input ref={mobile} type="number" placeholder="&nbsp;&nbsp;10-Digit Mobile Number" className="h-[45px]  sm1:w-[270px] sm1:mt-2 border-[1.5px] border-[#b1b1b1] w-[350px] ml-2 sm1:h-[35px]"/>
                                 </div>
 
                                 <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer   h-[65px] w-[750px] sm1:flex-col sm1:w-[300px] sm1:h-[95px] ">
-                                        <input type="number" placeholder="&nbsp;&nbsp;Pincode" className=" h-[45px] sm1:w-[270px] w-[350px] sm1:mt-2 border-[1.5px] border-[#b1b1b1] ml-2 sm1:h-[35px]"/>
-                                        <input type="text" placeholder="&nbsp;&nbsp;Locality" className="h-[45px] sm1:w-[270px] border-[1.5px] sm1:mt-2 border-[#b1b1b1] w-[350px] ml-2 sm1:h-[35px]"/>
+                                        <input ref={pincode} type="number" placeholder="&nbsp;&nbsp;Pincode" className=" h-[45px] sm1:w-[270px] w-[350px] sm1:mt-2 border-[1.5px] border-[#b1b1b1] ml-2 sm1:h-[35px]"/>
+                                        <input ref={local} type="text" placeholder="&nbsp;&nbsp;Locality" className="h-[45px] sm1:w-[270px] border-[1.5px] sm1:mt-2 border-[#b1b1b1] w-[350px] ml-2 sm1:h-[35px]"/>
                                 </div>
 
-                                <textarea className=" resize-none border-[1.5px] border-[#b1b1b1] ml-2 mt-4 sm1:w-[300px] sm1:ml-4" placeholder="&nbsp; &nbsp;Address (Area and Street)" cols={65} rows={4}></textarea>
+                                <textarea ref={area} className=" resize-none border-[1.5px] border-[#b1b1b1] ml-2 mt-4 sm1:w-[300px] sm1:ml-4" placeholder="&nbsp; &nbsp;Address (Area and Street)" cols={65} rows={4}></textarea>
 
                                 <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer sm1:h-[95px]  h-[65px] w-[750px] sm1:w-[300px] sm1:mt-2 sm1:flex-col ">
-                                        <input type="text" placeholder="&nbsp;&nbsp;City/District/Town" className=" h-[45px] w-[350px] sm1:mt-2 sm1:w-[270px] border-[1.5px] border-[#b1b1b1] ml-2 sm1:h-[35px]"/>
-                                        <select  className=" h-[45px] w-[350px] border-[1.5px] border-[#b1b1b1] sm1:mt-2 sm1:w-[270px] ml-2 sm1:h-[35px]">
+                                        <input ref={city} type="text" placeholder="&nbsp;&nbsp;City/District/Town" className=" h-[45px] w-[350px] sm1:mt-2 sm1:w-[270px] border-[1.5px] border-[#b1b1b1] ml-2 sm1:h-[35px]"/>
+                                        <select ref={state}  className=" h-[45px] w-[350px] border-[1.5px] border-[#b1b1b1] sm1:mt-2 sm1:w-[270px] ml-2 sm1:h-[35px]">
                                         <option value="" disabled selected hidden>Select State</option>
-                                        <option value="">Andhra Pradesh</option>
-                                        <option value="">Arunachal Pradesh</option>
-                                        <option value="">Assam</option>
-                                        <option value="">Bihar</option>
-                                        <option value="">Chhattisgarh</option>
-                                        <option value="">Goa</option>
-                                        <option value="">Gujarat</option>
-                                        <option value="">Haryana</option>
-                                        <option value="">Himachal Pradesh</option>
-                                        <option value="">Jammu and Kashmir</option>
-                                        <option value="">Jharkhand</option>
-                                        <option value="">Karnataka</option>
-                                        <option value="">Kerala</option>
-                                        <option value="">Madhya Pradesh</option>
-                                        <option value="">Maharashtra</option>
-                                        <option value="">Manipur</option>
-                                        <option value="">Meghalaya</option>
-                                        <option value="">Mizoram</option>
-                                        <option value="">Nagaland</option>
-                                        <option value="">Odisha</option>
-                                        <option value="">Punjab</option>
-                                        <option value="">Rajasthan</option>
-                                        <option value="">Sikkim</option>
-                                        <option value="">Tamil Nadu</option>
-                                        <option value="">Telangana</option>
-                                        <option value="">Tripura</option>
-                                        <option value="">Uttar Pradesh</option>
-                                        <option value="">Uttarakhand</option>
-                                        <option value="">West Bengal</option>
+                                        <option value="Andhra Pradesh" >Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                        <option value="Assam">Assam</option>
+                                        <option value="Bihar">Bihar</option>
+                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Gujarat">Gujarat</option>
+                                        <option value="Haryana">Haryana</option>
+                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                        <option value="Jharkhand">Jharkhand</option>
+                                        <option value="Karnataka">Karnataka</option>
+                                        <option value="Kerala">Kerala</option>
+                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                        <option value="Maharashtra">Maharashtra</option>
+                                        <option value="Manipur">Manipur</option>
+                                        <option value="Meghalaya">Meghalaya</option>
+                                        <option value="Mizoram">Mizoram</option>
+                                        <option value="Nagaland">Nagaland</option>
+                                        <option value="Odisha">Odisha</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Rajasthan">Rajasthan</option>
+                                        <option value="Sikkim">Sikkim</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="Tripura">Tripura</option>
+                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                        <option value="Uttarakhand">Uttarakhand</option>
+                                        <option value="West Bengal">West Bengal</option>
                                         </select>
                                 </div>
 
                                 <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer   h-[65px] w-[750px] sm1:w-[300px] sm1:ml-4">
-                                      <button className="h-[45px] text-[18px] text-[white] w-[230px] sm1:w-[180px] sm1:h-[40px] sm1:text-[15px] bg-[#4C3F91] mt-3 ml-2">Save and Deliver Here</button>
+                                      <button onClick={updateadd} className="h-[45px] text-[18px] text-[white] w-[230px] sm1:w-[180px] sm1:h-[40px] sm1:text-[15px] bg-[#4C3F91] mt-3 ml-2">Save and Deliver Here</button>
                                       <h2 onClick={closeadbox} className="ml-4 text-[#3883f5] mt-3 text-[18px]  sm1:text-[15px]">Cancel</h2>
                                 </div>
 
