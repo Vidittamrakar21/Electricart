@@ -3,7 +3,11 @@ import { EventHandler, useState } from "react"
 
 type propstype = {
     company: string[]
+    getdata: (x: string)=> void;
 }
+
+
+
 
 export default function Filter (props:propstype) {
 
@@ -21,6 +25,10 @@ export default function Filter (props:propstype) {
     const [check8, setcheck8] = useState(false);
     const [check9, setcheck9] = useState(false);
     const [check10, setcheck10] = useState(false);
+
+    const senddata = (x: string) =>{
+        props.getdata(x)
+    }
 
     const handlerange = (e: any) =>{
         //@ts-ignore
@@ -176,7 +184,7 @@ export default function Filter (props:propstype) {
                 
                {comp.length>0?comp.map((item:string, index:number)=>(
                 <div key={index} className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                <input type="checkbox" onClick={()=>{!check5?addfilters(`${item}`):""; setcheck5(true);}}  checked={check5}/>
+                <input type="checkbox" onClick={()=>{senddata(item) }}  checked={true}/>
                 <h3 className="ml-2">{item}</h3>
             </div>
                )):<></>}

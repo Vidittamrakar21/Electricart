@@ -39,6 +39,8 @@ export default function Search (){
     console.log(key)
 
     const [data, setdata] = useState([])
+    const [arr2, setarr2] = useState([])
+    const [len, setlen] = useState(0)
     const [box, openbox] = useState(false)
     const [focus, setfocus] = useState(true)
     const [opt, setopt] = useState([""])
@@ -159,43 +161,43 @@ export default function Search (){
 
     const checkfilter =()=>{
         if(param === "Laptop"){
-            setcomp(["HP","Lenovo","ASUS", "Apple" ])
+            setcomp(["Hp","Lenovo","Asus", "Apple" ])
         }
         else if(param === "Mobile"){
-            setcomp(["REDMI","OnePlus","OPPO", "Apple" ])
+            setcomp(["Redmi","OnePlus","OPPO", "Apple" ])
         }
 
         else if(param === "Headphone"){
-            setcomp(["ZEBRONICS","Mi","boAt"])
+            setcomp(["Zebronics","Mi","Boat"])
         }
 
         else if(param === "Tv"){
-            setcomp(["REDMI","SAMSUNG","SONY", "MI" ])
+            setcomp(["Redmi","Samsung","Sony", "Mi" ])
         }
         else if(param === "Speaker"){
-            setcomp(["boAt","JBL","ZEBRONICS", "Mivi" ])
+            setcomp(["Boat","JBL","Zebronics", "Mivi" ])
         }
         else if(param === "Smart Watch"){
-            setcomp(["Fasttrack","Fire-Boltt","Noise", "boAt" ,"SAMSUNG" ])
+            setcomp(["Fastrack","Fire-Boltt ","Noise", "Boat" ,"Samsung" ])
 
         }
 
         else if(param === "Fridge"){
-            setcomp(["SAMSUNG","Godrej","Whirlpool", "Haier" ])
+            setcomp(["Samsung","Godrej","Whirlpool", "Haier" ])
         }
 
         else if(param === "Washing Machine"){
-            setcomp(["SAMSUNG","LG" ])
+            setcomp(["Samsung","LG" ])
         }
 
         else if(param === "AC"){
             setcomp(["Voltas","Godrej","Whirlpool" ])
         }
         else if(param === "Keyboard"){
-            setcomp(["HP","Cosmic Byte","ZEBRONICS", "Keychron" ])
+            setcomp(["Hp","Cosmic Byte","Zebronics", "Keychron" ])
         }
         else if(param === "Mouse"){
-            setcomp(["HP","Portronics","ZEBRONICS", "Wings" ])
+            setcomp(["Hp","Portronics","ZEBRONICS", "Wings" ])
         }
         else if(param === "Trimmer"){
             setcomp(["PHILIPS","HAVELLS","NOVA" ])
@@ -306,6 +308,8 @@ export default function Search (){
 
     }
 
+    
+
 
     useEffect(()=>{
         checkfilter()
@@ -315,6 +319,7 @@ export default function Search (){
                 searchresult()
             }
         })
+        
     },[])
     
 
@@ -326,12 +331,51 @@ client.query({
     title
     spec
     rating
+    brand
     price
     image
     }
 }
 `
-}).then((result)=>{setdata(result.data.getbycategory)});
+}).then((result)=>{
+    if(data.length === 0){
+        setdata(result.data.getbycategory)
+        setarr2(result.data.getbycategory)
+        setlen((result.data.getbycategory).length)
+    }
+});
+
+
+function getselected (x:string){
+    type arrt = Array<any>
+    let arr: arrt
+   
+    //@ts-ignore
+    let emt =[]
+    if(data.length !== 0){
+       
+       console.log(x)
+        //@ts-ignore
+        arr = arr2.filter(product=>product.brand === x)
+        
+            if(arr.length > 0 && data.length === len){
+            //@ts-ignore
+            setdata(arr)
+
+            }
+            else{
+                  //@ts-ignore
+            setdata(data.concat(arr))
+            }
+        
+        
+       
+         
+       
+        console.log("func is working", len)
+    }
+}
+
 
 
     if(!param){
@@ -398,7 +442,7 @@ client.query({
             
     
             <div className="flex flex-row justify-center items-start min-h-[900px] w-[100%] relative top-[100px] ">
-                <Filter company={comp}></Filter>
+                <Filter company={comp} getdata={getselected}></Filter>
                 <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
 
               <Itemcardskeleton></Itemcardskeleton>
@@ -445,7 +489,7 @@ client.query({
         
 
         <div className="flex flex-row justify-center items-start min-h-[900px] w-[100%] relative top-[100px] ">
-            <Filter company={comp}></Filter>
+            <Filter company={comp} getdata={getselected}></Filter>
             <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
             {data.map((item: itemtype, index:number)=>(
                 <Itemcard key={index} id={item._id} title={item.title} spec={item.spec} rating={item.rating} price={item.price} image={item.image}></Itemcard>
@@ -458,6 +502,8 @@ client.query({
        
            
             </div>
+
+           
         </div>
 
         </div>
