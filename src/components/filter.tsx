@@ -1,9 +1,12 @@
 import { set } from "firebase/database";
-import { EventHandler, useState } from "react"
+import { EventHandler, useEffect, useState } from "react"
 
 type propstype = {
     company: string[]
+    minimum: number
     getdata: (x: string)=> void;
+    removedata: (y: string)=> void
+    setrange: (x: number,y: number)=> void
 }
 
 
@@ -13,7 +16,7 @@ export default function Filter (props:propstype) {
 
     const comp = props.company;
     const [range, setrange] = useState(0)
-    const [price, setprice] = useState(500)
+    const [price, setprice] = useState(0)
     const [filter, openfilter] = useState(false)
     const [check1, setcheck1] = useState(false);
     const [check2, setcheck2] = useState(false);
@@ -26,19 +29,62 @@ export default function Filter (props:propstype) {
     const [check9, setcheck9] = useState(false);
     const [check10, setcheck10] = useState(false);
 
-    const senddata = (x: string) =>{
-        props.getdata(x)
+    useEffect(()=>{
+        setprice(props.minimum)
+      
+    },[])
+
+
+    const senddata = (x: string , y: number) =>{
+        console.log("vv",range)
+        console.log("vv",props.minimum)
+
+        if(blue.includes(y)){
+            return
+        }
+        else{
+            props.getdata(x)
+            addfilters(x)
+        }
+       
+    }
+
+    type bluetype = {
+        state: boolean
+        index: number | null
+    }
+
+     const [blue, setblue] = useState<number[]>([])
+
+    const highlight = ( y:number) => {
+        if(blue.includes(y)){
+            return
+        }
+        else{
+
+            setblue(blue.concat(y))
+        }
+        // console.log(blue.filter(item=> item.index === y))
     }
 
     const handlerange = (e: any) =>{
         //@ts-ignore
-        let a = 500 ;
-        const result = a + ((e.target.value)*10)
+        let a = props.minimum ;
+        const result = a + ((e.target.value)*500)
         // console.log("value" ,result)
         setprice(result)
         setrange(e.target.value)
         
-        setTimeout(()=>{addfilters(`min - ${price + 10}`)}, 1500)
+        // setTimeout(()=>{addfilters(`min - ${price + 10}`)}, 1500)
+    
+    }
+
+    const [clicked ,setclick] = useState(false);
+
+    const addrange = () =>{
+        props.setrange(props.minimum, price)
+        addfilters(`min - ${price}`)
+        setclick(true)
     }
 
 
@@ -61,6 +107,11 @@ export default function Filter (props:propstype) {
    
           filters.splice(x,1);
            setfilters(filters)
+
+           blue.splice(x,1);
+           setblue(blue)
+       
+       props.removedata(y)    
        
 
       if(y === '4★ & above'){
@@ -76,19 +127,7 @@ export default function Filter (props:propstype) {
       else if(y === '1★ & above'){
             setcheck4(false)
       }
-      else if(y === 'Apple'){
-            setcheck5(false)
-      }
-      else if(y === 'Asus'){
-            setcheck6(false)
-      }
-      else if(y === 'Hp'){
-            setcheck7(false)
-      }
-      else if(y === 'Lenevo'){
-            setcheck8(false)
-      }
-
+     
       else if(y === 'No Cost EMI'){
             setcheck9(false)
       }
@@ -100,12 +139,15 @@ export default function Filter (props:propstype) {
 
       else{
         setrange(0)
-        setprice(500)
+        setprice(props.minimum)
+        setclick(false)
       }
     }
 
     const clearallfilters = () => {
+        props.getdata("")
         setfilters([])
+        setblue([])
         setcheck1(false)
         setcheck2(false)
         setcheck3(false)
@@ -152,10 +194,13 @@ export default function Filter (props:propstype) {
         </div>
 
         <h1 className="ml-4 mt-2">Price</h1>
-        <input type="range" onChange={ handlerange}  className="ml-4" value={range} />
+        <input type="range" onChange={ !clicked?handlerange: undefined }  className="ml-4" value={range} />
 
-        <div className="h-[35] border ml-4 mt-2 border-[#9b9a9a] w-[90] flex items-center justify-center">
-            {price}
+        <div className="flex h-[33px] min-w-[120px] items-center justify-center">
+        <div className="h-[30px] border ml-4 mt-2 border-[#9b9a9a] w-[90] flex items-center justify-center">
+            {price} 
+        </div>
+        <button onClick={addrange} className="h-[30px] w-[80px] border mt-2 border-[gray] ml-2">Apply</button>
         </div>
 
         <h1 className="mt-2 ml-4">Customer Ratings</h1>
@@ -182,9 +227,9 @@ export default function Filter (props:propstype) {
         <h1 className="mt-2 ml-4">Brands</h1>
         <div className="min-h-[50px]  w-[270px] flex flex-col justify-center items-center">
                 
-               {comp.length>0?comp.map((item:string, index:number)=>(
-                <div key={index} className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
-                <input type="checkbox" onClick={()=>{senddata(item) }}  checked={true}/>
+               {comp.length>0?comp.map((item:string, i:number)=>(
+                <div key={i} className="h-[40px] ml-4 w-[250px] flex flex-row justify-start items-center">
+                <input type="checkbox" onClick={()=>{senddata(item, i); highlight(i) }}   checked={blue.includes(i)? true: false}/>
                 <h3 className="ml-2">{item}</h3>
             </div>
                )):<></>}

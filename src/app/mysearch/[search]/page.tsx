@@ -136,6 +136,7 @@ export default function Search (){
         setopt([])
         openbox(false)
         setinp("")
+        // setdata([])
         if(x === 'Air Conditioner')
         {
             router.push(`/mysearch/search?param=AC`)
@@ -158,49 +159,62 @@ export default function Search (){
     }
 
     const [comp, setcomp] = useState([""])
+    const [min, setmin] = useState(0)
 
     const checkfilter =()=>{
         if(param === "Laptop"){
             setcomp(["Hp","Lenovo","Asus", "Apple" ])
+            setmin(23700)
         }
         else if(param === "Mobile"){
             setcomp(["Redmi","OnePlus","OPPO", "Apple" ])
+            setmin(5299)
         }
 
         else if(param === "Headphone"){
             setcomp(["Zebronics","Mi","Boat"])
+            setmin(499)
         }
 
         else if(param === "Tv"){
             setcomp(["Redmi","Samsung","Sony", "Mi" ])
+            setmin(13499)
         }
         else if(param === "Speaker"){
             setcomp(["Boat","JBL","Zebronics", "Mivi" ])
+            setmin(499)
         }
         else if(param === "Smart Watch"){
             setcomp(["Fastrack","Fire-Boltt ","Noise", "Boat" ,"Samsung" ])
+            setmin(1299)
 
         }
 
         else if(param === "Fridge"){
             setcomp(["Samsung","Godrej","Whirlpool", "Haier" ])
+            setmin(15990)
         }
 
         else if(param === "Washing Machine"){
             setcomp(["Samsung","LG" ])
+            setmin(11000)
         }
 
         else if(param === "AC"){
             setcomp(["Voltas","Godrej","Whirlpool" ])
+            setmin(23000)
         }
         else if(param === "Keyboard"){
             setcomp(["Hp","Cosmic Byte","Zebronics", "Keychron" ])
+            setmin(299)
         }
         else if(param === "Mouse"){
             setcomp(["Hp","Portronics","ZEBRONICS", "Wings" ])
+            setmin(299)
         }
         else if(param === "Trimmer"){
             setcomp(["PHILIPS","HAVELLS","NOVA" ])
+            setmin(649)
         }
 
 
@@ -227,36 +241,43 @@ export default function Search (){
             router.push(`/mysearch/search?param=Laptop`)
             openbox(false);
             setinp("")
+            setdata([])
         }
         else if(str === "mobile"){
             router.push(`/mysearch/search?param=Mobile`)
             openbox(false);
             setinp("")
+            setdata([])
         }
 
         else if(str === "headphone"){
             router.push(`/mysearch/search?param=Headphone`)
             openbox(false);
             setinp("")
+            setdata([])
         }
 
         else if(str === "tv"){
             router.push(`/mysearch/search?param=Tv`)
             openbox(false);
             setinp("")
+            setdata([])
         }
 
         else if(str === "speaker"){
             router.push(`/mysearch/search?param=Speaker`)
             openbox(false);
             setinp("")
-
+            checkfilter()
+            setdata([])
         }
 
         else if(str === "smart watch"){
             router.push(`/mysearch/search?param=Smart Watch`)
             openbox(false);
             setinp("")
+            checkfilter()
+            setdata([])
 
         }
 
@@ -264,6 +285,7 @@ export default function Search (){
             router.push(`/mysearch/search?param=Fridge`)
             openbox(false);
             setinp("")
+            setdata([])
 
         }
 
@@ -271,6 +293,7 @@ export default function Search (){
             router.push(`/mysearch/search?param=Washing Machine`)
             openbox(false);
             setinp("")
+            setdata([])
 
         }
 
@@ -278,22 +301,26 @@ export default function Search (){
             router.push(`/mysearch/search?param=AC`)
             openbox(false);
             setinp("")
+            setdata([])
         }
         else if(str === "keyboard"){
             router.push(`/mysearch/search?param=Keyboard`)
             openbox(false);
             setinp("")
+            setdata([])
             
         }
         else if(str === "mouse"){
             router.push(`/mysearch/search?param=Mouse`)
             openbox(false);
             setinp("")
+            setdata([])
         }
         else if(str === "trimmer"){
             router.push(`/mysearch/search?param=Trimmer`)
             openbox(false);
             setinp("")
+            setdata([])
            
         }
 
@@ -321,7 +348,8 @@ export default function Search (){
         })
         
     },[])
-    
+
+    const [prevparam, setprev]  = useState<string | null>("")
 
 client.query({
     query: gql`
@@ -337,44 +365,96 @@ client.query({
     }
 }
 `
-}).then((result)=>{
-    if(data.length === 0){
+}).then(async (result)=>{
+    if(prevparam !== param ){
         setdata(result.data.getbycategory)
         setarr2(result.data.getbycategory)
         setlen((result.data.getbycategory).length)
+        checkfilter()
+        setprev(param)
     }
 });
+
+const [used , setuse] = useState(false);
 
 
 function getselected (x:string){
     type arrt = Array<any>
     let arr: arrt
    
-    //@ts-ignore
-    let emt =[]
-    if(data.length !== 0){
-       
-       console.log(x)
-        //@ts-ignore
-        arr = arr2.filter(product=>product.brand === x)
-        
-            if(arr.length > 0 && data.length === len){
-            //@ts-ignore
-            setdata(arr)
 
+    // if(data.length !== 0){
+
+   
+
+          
+          //@ts-ignore
+          arr = arr2.filter(product=>product.brand === x)
+          
+          if(arr.length > 0 && data.length === len){
+              //@ts-ignore
+              setdata(arr)
+              
             }
+            else if(arr.length > 0){
+                //@ts-ignore
+                setdata(data.concat(arr))
+            }
+            
+            else if(arr.length === 0){
+                setdata(arr2)
+            }
+            
             else{
-                  //@ts-ignore
-            setdata(data.concat(arr))
+                setdata(arr2)
             }
+        
+
+       
         
         
        
          
        
         console.log("func is working", len)
-    }
+    // }
 }
+
+
+function removeselected (x:string){
+
+    type arrt = Array<any>
+    let arr: arrt
+
+    //@ts-ignore
+    arr = data.filter(product=>product.brand !== x)
+   
+    if(arr.length > 0){
+        //@ts-ignore
+    setdata(arr)
+    }
+    else{
+        setdata(arr2)
+    }
+
+
+}
+
+function handlerange (x:number, y: number){
+    setuse(true)
+    type arrt = Array<any>
+    let arr: arrt
+
+    //@ts-ignore
+    arr = data.filter(product=>product.price >=x && product.price<= y)
+
+    if(arr.length>0){
+        //@ts-ignore
+        setdata(arr)
+    }
+    
+}
+
 
 
 
@@ -442,7 +522,7 @@ function getselected (x:string){
             
     
             <div className="flex flex-row justify-center items-start min-h-[900px] w-[100%] relative top-[100px] ">
-                <Filter company={comp} getdata={getselected}></Filter>
+                <Filter company={comp} getdata={getselected} removedata={removeselected} minimum ={min} setrange={handlerange}></Filter>
                 <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
 
               <Itemcardskeleton></Itemcardskeleton>
@@ -489,7 +569,7 @@ function getselected (x:string){
         
 
         <div className="flex flex-row justify-center items-start min-h-[900px] w-[100%] relative top-[100px] ">
-            <Filter company={comp} getdata={getselected}></Filter>
+            <Filter company={comp} getdata={getselected} removedata={removeselected}  minimum ={min} setrange={handlerange}></Filter>
             <div className=" flex flex-row justify-start items-center min-h-[400px] mb-[130px] w-[1350px] bg-[white] flex-wrap ml-[150px] sm1:ml-[0px] sm1:w-[350px]">
             {data.map((item: itemtype, index:number)=>(
                 <Itemcard key={index} id={item._id} title={item.title} spec={item.spec} rating={item.rating} price={item.price} image={item.image}></Itemcard>
