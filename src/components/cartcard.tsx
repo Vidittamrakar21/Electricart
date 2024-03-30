@@ -1,12 +1,31 @@
 import { useState, useEffect } from "react";
 import { gql } from "@apollo/client";
 import { client } from "@/app/client";
-
+import Cookies from "js-cookie";
+import { gqclient } from "@/app/sign/page";
 type propstype = {
     id: string
+    rmitem: (x: string) => void
+    fetchprice: (x: number) => void
+    fetchdiscount: (x: number) => void
 }
 
+const removecart = gql`
+
+mutation Mutation($uid: String, $pid: String) {
+
+    rmcart(uid: $uid, pid: $pid)
+  }
+
+
+`
+
 export default function Cardcart(props:propstype){
+
+    const id = Cookies.get('uid');
+
+    
+    
 
     interface producttype {
         title: string,
@@ -50,19 +69,41 @@ export default function Cardcart(props:propstype){
         }
     }
     `
-    }).then((result)=>{ setdata(result.data.getbyid)});
+    }).then((result)=>{ 
+       if(data === undefined){
+        setdata(result.data.getbyid) ;  
+        //@ts-ignore
+        setprice((result.data.getbyid).price)
+        props.fetchprice((result.data.getbyid).originalprice)
+        props.fetchdiscount(((result.data.getbyid).originalprice) - ((result.data.getbyid).price))
+       }
+    });
+    
 
-
-
+    const price = data?.price
+    const originalprice = data?.originalprice
+    //@ts-ignore
+    const off = Math.floor((((originalprice)- (price))/(originalprice))*100)
+    
+    
+    
+    
     const [itemcount , setcount ] = useState(1);
-
+    const [itemprice , setprice ] = useState(0);
+    //@ts-ignore
+    
     const incrementcount = () => {
         setcount(item => item + 1)
+        //@ts-ignore
+        setprice(data?.price * (itemcount+1))
+    
     }
 
     const decrementcount = () => {
         if(itemcount > 1){
-            setcount(item => item - 1)
+            setcount(item => item - 1) 
+            //@ts-ignore
+            setprice(itemprice - (data?.price))
 
         }
     }
@@ -79,10 +120,36 @@ export default function Cardcart(props:propstype){
     }
       };
 
-      const price = data?.price
-      const originalprice = data?.originalprice
-//@ts-ignore
-      const off = Math.floor((((originalprice)- (price))/(originalprice))*100)
+
+    const removeitem = async () => {
+        // if(id){
+        //    await gqclient.mutate({
+        //         mutation: removecart,
+        //         variables: {
+        //             uid: id,
+        //             pid: props.id
+        //         }
+        //     }).then((res)=> {
+        //         if(res.data.rmcart){
+        //             // window.location.reload()
+        //             props.rmitem("")
+                    
+                   
+        //         }
+        //     })
+
+         props.rmitem(props.id)
+
+        console.log(props.id)
+    
+    }
+
+    useEffect(()=>{
+        //@ts-ignore
+        props.fetchprice(data?.originalprice)
+
+    },[])
+     
 
     return(
         <>
@@ -100,7 +167,7 @@ export default function Cardcart(props:propstype){
 
                         <div className="flex flex-row justify-center items-center">
                                  <h5 className=" line-through text-[14px] text-[gray]">&#8377; {data?.originalprice}</h5>
-                                 <h2 className="text-[17px] font-[600] ml-2">&#8377; {data?.price}</h2>
+                                 <h2 className="text-[17px] font-[600] ml-2">&#8377; {itemprice}</h2>
                                  <h2 className="  text-[14px] ml-2 text-[green] sm1:text-[13px]">{off}% Off 1 coupon & 1 offer applied</h2>
                         </div>
 
@@ -111,7 +178,7 @@ export default function Cardcart(props:propstype){
                                      <div className="h-[23px] w-[23px] border border-[#6d6c6c] rounded-[50%] flex flex-row justify-center items-center" onClick={incrementcount}>+</div>
                                  </div>
 
-                                 <h1 className="text-[18px] text-[500] ml-2 cursor-pointer">Remove</h1>
+                                 <h1 onClick={removeitem} className="text-[18px] text-[500] ml-2 cursor-pointer">Remove</h1>
                         </div>
 
                      </div>

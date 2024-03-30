@@ -149,8 +149,8 @@ function Signpage (){
                         if((acc.data.giveaccess).email === (res.data.checkuser).data.email){
                         
                           Cookies.set('RF_TOKEN',(res.data.checkuser).accesstoken,{expires: 7})
-                          Cookies.set('name',(acc.data.giveaccess).name )
-                          Cookies.set('uid',(acc.data.giveaccess).id )
+                          Cookies.set('name',(acc.data.giveaccess).name ,{expires: 7})
+                          Cookies.set('uid',(acc.data.giveaccess).id ,{expires: 7})
                           
                         
                             router.push('/')

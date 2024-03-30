@@ -1,11 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState , CSSProperties} from "react"
 import {useRouter} from 'next/navigation'
 import { gql } from "@apollo/client"
 import { gqclient } from "../sign/page"
 import Cookies from "js-cookie"
 import Cardcart from "@/components/cartcard"
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 const finduser = gql`
 mutation Mutation($uid: String) {
@@ -18,36 +20,83 @@ mutation Mutation($uid: String) {
 
 `
 
+const removecart = gql`
+
+mutation Mutation($uid: String, $pid: String) {
+
+    rmcart(uid: $uid, pid: $pid)
+  }
+
+
+`
+
+const override: CSSProperties = {
+    position: "absolute",
+    top: "290px"
+  };
 export default function Cart() {
 
 
     
 
-    
+    const id = Cookies.get('uid');
 
     const router = useRouter()
     const [data, setdata] = useState([])
+    const [loading, isloading] = useState(false)
 
-    const fetchcart = async ()=>{
-
-        const id = Cookies.get('uid');
+    const fetchcart = async (x: number)=>{
+        isloading(true)
+       
 
         if(id){
-            gqclient.mutate({
+          await  gqclient.mutate({
                 mutation: finduser,
                 variables: {
                     uid: id
                 }
             }).then((res)=>{
 
-                setdata(res.data.findoneuser.cart)
+                if(res.data.findoneuser.cart){
+                    setdata(res.data.findoneuser.cart)
+                    isloading(false)
+                    Cookies.set('cart',(res.data.findoneuser.cart).length )
+                }
+
+                else{
+                    isloading(true)
+                }
+
+               
+                console.log("fetch worked")
             })
         }
         
     }
 
+    const removeitem = async (x: string) => {
+        isloading(true)
+        if(id){
+           await gqclient.mutate({
+                mutation: removecart,
+                variables: {
+                    uid: id,
+                    pid: x
+                }
+            }).then((res)=> {
+                if(res.data.rmcart){
+                    isloading(false)
+                    setdata([])
+                    fetchcart(0)
+
+                    console.log(x)
+                }
+            })
+        }
+    }
+
     useEffect(()=>{
-        fetchcart()
+        fetchcart(0)
 
     },[])
 
@@ -55,18 +104,23 @@ export default function Cart() {
         router.push('/checkout')
     }
 
-
-    const [itemcount , setcount ] = useState(1);
-
-    const incrementcount = () => {
-        setcount(item => item + 1)
+    const movehome = () => {
+        router.push('/')
     }
 
-    const decrementcount = () => {
-        if(itemcount > 1){
-            setcount(item => item - 1)
 
-        }
+    const [itemprice , setprice ] = useState(0);
+    const [discount , setdiscount ] = useState(0);
+
+    const settingprice = (x: number) => {
+        
+            setprice( x)
+
+       
+    }
+
+    const discountprice = (x: number) => {
+       setdiscount( x)
     }
 
     return (
@@ -74,14 +128,16 @@ export default function Cart() {
 
             {/* use when cart is empty  */}
 
-            {data.length === 0 ? <div className="h-[400px] w-[1100px] bg-[white] mt-[85px] flex flex-col justify-center items-center sm1:w-[340px]">
+            {data.length === 0 && loading === false ? <div className="h-[400px] w-[1100px] bg-[white] mt-[85px] flex flex-col justify-center items-center sm1:w-[340px]">
                 <div className="h-[250px] w-[250px] ">
                     <img src="/images/cart.png" className="h-[100%] w-[100%]" alt="" />
                 </div>
                 <h1 className="text-[18px]">Your cart is empty!</h1>
-                <button className="h-[35px] w-[180px] bg-[#4fb0d6] text-[white] mt-5 cursor-pointer">Shop Now</button>
+                <button onClick={movehome} className="h-[35px] w-[180px] bg-[#4fb0d6] text-[white] mt-5 cursor-pointer">Shop Now</button>
             </div> : <></>}
 
+
+            <ClipLoader color="#36d7b7" loading={loading} size={40} cssOverride={override}/>
 
 
             <div className={data.length>0?"min-h-[700px] w-[1300px] mt-[80px] flex flex-row justify-evenly items-start mb-[50px] select-none sm1:flex-col sm1:w-[350px] sm1:justify-center sm1:items-center sm1:mt-[25px]": "hidden"}>
@@ -90,7 +146,7 @@ export default function Cart() {
                     {/* cart item */}
 
                    {data.map((item: string, index: number)=>(
-                     <Cardcart key={index} id={item}></Cardcart>
+                     <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice}></Cardcart>
                    ))}
 
 
@@ -109,14 +165,14 @@ export default function Cart() {
                      </div>
 
                      <div className="flex flex-row  justify-between items-center h-[45px] w-[380px] sm1:w-[320px] ">
-                     <h2 >Price (1 item)</h2>
-                     <h2>&#8377;1,06,580</h2>
+                     <h2 >Price ({data.length} item)</h2>
+                     <h2>&#8377;{itemprice}</h2>
 
                      </div>
 
                      <div className="flex flex-row justify-between items-center h-[45px] w-[380px]  sm1:w-[320px]">
                      <h2>Discount</h2>
-                     <h2 className="text-[green]">-&#8377;8580</h2>
+                     <h2 className="text-[green]">-&#8377;{discount}</h2>
 
                      </div>
 
@@ -131,12 +187,12 @@ export default function Cart() {
 
                      <div className="flex flex-row justify-between items-center h-[45px] w-[380px] sm1:w-[320px]">
                      <h2 className="text-[18px] font-[500]">Total Amount</h2>
-                     <h2 className="text-[18px] font-[500]">&#8377;98,000</h2>
+                     <h2 className="text-[18px] font-[500]">&#8377;{itemprice - discount}</h2>
 
                      </div>
 
                      <div className="flex flex-row justify-start items-center h-[45px] w-[380px] sm1:w-[320px]">
-                     <h1 className="text-[green]">You will save &#8377;8580 on this order </h1>
+                     <h1 className="text-[green]">You will save &#8377;{discount} on this order </h1>
 
                      </div>
 

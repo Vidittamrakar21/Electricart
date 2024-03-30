@@ -3,40 +3,9 @@
 import { useContext ,useEffect,useState} from "react"
 import { EcoContext } from "@/context/contextapi"
 import {useRouter , useParams, usePathname} from 'next/navigation'
-import Signpage from "./sign/sign"
-import { gqclient } from "@/app/sign/page"
-import { gql} from '@apollo/client';
 import Cookies from 'js-cookie'
 
 
-const CREATE_USER = gql`
-mutation Mutation($token: String) {
-    checkuser(token: $token){
-      data {
-        name
-        email
-        id
-        iat
-        exp
-      }
-      accesstoken
-    }
-
-    
-  }
-`
-const CHECK_USER = gql`
-mutation Mutation($token: String) {
-  giveaccess(token: $token){
-    name
-    email 
-    id
-
-  }
-
-    
-  }
-`
 
 export default function Navbar (){
   const data  =  useContext(EcoContext);
@@ -109,54 +78,19 @@ export default function Navbar (){
 
 const [udata, setudata] = useState<string| undefined>("")
 
-  const validateuser = async ()=> {
+const [num, setnum] = useState(0)
+
+  
     
-    const cook = Cookies.get('AC_TOKEN')
-    const rfcook = Cookies.get('RF_TOKEN')
-    if(cook && (!rfcook)){
-      router.push('/sign')
-      // await gqclient.mutate({
-      //   mutation: CREATE_USER,
-      //   variables: {
-      //     token: cook
-      //   }
-      //   //@ts-ignore
-      // }).then(async (res)=>{
-      //   // console.log((res.data.checkuser).accesstoken)
-      //   if(res.data.checkuser){
-      //     console.log(res.data.checkuser)
-      //     await gqclient.mutate({
-      //       mutation: CHECK_USER,
-      //       variables: {
-      //         token: (res.data.checkuser).accesstoken
-      //       }
-
-      //     }).then((acc)=>{
-      //       console.log(acc.data.giveaccess)
-      //       if((acc.data.giveaccess).email === (res.data.checkuser).data.email){
-      //         setudata((acc.data.giveaccess).name)
-      //         Cookies.set('RF_TOKEN',(res.data.checkuser).accesstoken,{expires: 7})
-      //         Cookies.set('name',(acc.data.giveaccess).name )
-      //       } 
-      //     })
-      
-      //   }
-      // })
-    }
-
-    else if(cook && rfcook){
-      
-     const name = Cookies.get('name')
-      setudata(name)
-    }
-  }
-
+  
+   
 
 
   const logoutuser = () => {
     Cookies.remove('RF_TOKEN')
     Cookies.remove('AC_TOKEN')
     Cookies.remove('name')
+    Cookies.remove('uid')
     alert("Logged Out Successfully !")
     setudata(undefined)
     setbox(false)
@@ -164,13 +98,16 @@ const [udata, setudata] = useState<string| undefined>("")
 
   useEffect(()=>{
    
-      // validateuser()
+      
+      const cart = Cookies.get('cart')
+      //@ts-ignore
+      setnum(cart)
       const name = Cookies.get('name')
       setudata(name)
 
     console.log("working")
     
-  },[])
+  })
 
     return(
  
@@ -195,8 +132,8 @@ const [udata, setudata] = useState<string| undefined>("")
             </div>
 
             <div className=" flex flex-row items-start justify-center cursor-pointer sm1:mr-2 " onClick={opencart}>
-            <div className="flex justify-center items-center h-[15px] w-[15px] rounded-[50%] bg-[red] text-[white]">
-                1
+            <div className={num>0?"flex justify-center items-center h-[15px] w-[15px] rounded-[50%] bg-[red] text-[white]": "hidden"}>
+                {num}
               </div>
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="black" viewBox="0 0 16 16">
             <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
