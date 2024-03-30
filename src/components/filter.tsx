@@ -28,6 +28,7 @@ export default function Filter (props:propstype) {
     const [check8, setcheck8] = useState(false);
     const [check9, setcheck9] = useState(false);
     const [check10, setcheck10] = useState(false);
+    const [rangefill, setrangefill] = useState<string[]>([]);
 
     useEffect(()=>{
         setprice(props.minimum)
@@ -83,8 +84,15 @@ export default function Filter (props:propstype) {
 
     const addrange = () =>{
         props.setrange(props.minimum, price)
-        addfilters(`min - ${price}`)
+        setrangefill([`min - ${price}`])
         setclick(true)
+    }
+    const removerange = () =>{
+        setrangefill([])
+        setrange(0)
+        setprice(props.minimum)
+        setclick(false)
+        props.setrange(0,0)
     }
 
 
@@ -138,9 +146,7 @@ export default function Filter (props:propstype) {
       }
 
       else{
-        setrange(0)
-        setprice(props.minimum)
-        setclick(false)
+       
       }
     }
 
@@ -160,9 +166,7 @@ export default function Filter (props:propstype) {
         setcheck10(false)
     }
 
-    const onmouse = () =>{
-        console.log("left")
-    }
+   
 
   return(
       <>
@@ -191,6 +195,15 @@ export default function Filter (props:propstype) {
            </div>
            ))}
 
+           {rangefill.map((item,index)=>(
+             <div key={index} className="h-[35px] min-w-[90px] max-w-[200px] text-[black] text-[13px] p-2 bg-[#a3a3a3d5] rounded-[4px] flex justify-center items-center mt-2 ml-1">
+            
+             <div className="ml-3">
+               {item}
+             </div>
+           </div>
+           ))}
+
         </div>
 
         <h1 className="ml-4 mt-2">Price</h1>
@@ -201,6 +214,7 @@ export default function Filter (props:propstype) {
             {price} 
         </div>
         <button onClick={addrange} className="h-[30px] w-[80px] border mt-2 border-[gray] ml-2">Apply</button>
+        <button onClick={removerange} className="h-[30px] w-[80px] border mt-2 border-[gray] ml-2">Remove</button>
         </div>
 
         <h1 className="mt-2 ml-4">Customer Ratings</h1>

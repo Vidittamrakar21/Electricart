@@ -4,9 +4,16 @@ import { useState } from 'react'
 import {client} from "../../client"
 import { gqclient } from '@/app/sign/page'
 import { gql} from "@apollo/client"
+import Cookies from 'js-cookie'
+import { Cookie } from 'next/font/google'
 
+const UPDATE_CART = gql`
 
+mutation Mutation($uid: String, $pid: String) {
+    addcart(uid: $uid, pid: $pid)
+  }
 
+`
 
 
 
@@ -45,7 +52,26 @@ export default function Product () {
     const [box , isbox] = useState<Boolean>(false)
 
     const handlebox = () =>{
-        isbox(true)
+        const uuid = Cookies.get('uid')
+        const rftoken = Cookies.get('RF_TOKEN')
+       if(id && rftoken){
+
+           gqclient.mutate({
+               mutation: UPDATE_CART,
+               variables: {
+                   uid: uuid,
+                   pid: id
+                }
+            }).then((res)=>{
+                if(res.data.addcart){
+                    isbox(true)
+                }
+            })
+        }
+        else{
+            router.push('/sign')
+        } 
+    
     }
     //@ts-ignore
     const [data, setdata] = useState<producttype>("")

@@ -40,7 +40,9 @@ export default function Search (){
 
     const [data, setdata] = useState([])
     const [arr2, setarr2] = useState([])
+    const [arr3, setarr3] = useState([])
     const [len, setlen] = useState(0)
+    const [len1, setlen1] = useState(0)
     const [box, openbox] = useState(false)
     const [focus, setfocus] = useState(true)
     const [opt, setopt] = useState([""])
@@ -385,11 +387,29 @@ function getselected (x:string){
 
     // if(data.length !== 0){
 
-   
+    if(used){
+        
+         //@ts-ignore
+         arr = arr3.filter(product=>product.brand === x)
+         if(arr.length > 0 && data.length === arr3.length){
+            //@ts-ignore
+            setdata(arr)
+            
+          }
 
-          
-          //@ts-ignore
-          arr = arr2.filter(product=>product.brand === x)
+          else if(arr.length > 0 ){
+            //@ts-ignore
+            setdata(data.concat(arr))
+          }
+
+
+    }
+
+    else{
+
+        
+        //@ts-ignore
+        arr = arr2.filter(product=>product.brand === x)
           
           if(arr.length > 0 && data.length === len){
               //@ts-ignore
@@ -408,16 +428,17 @@ function getselected (x:string){
             else{
                 setdata(arr2)
             }
-        
-
-       
-        
-        
-       
-         
-       
-        console.log("func is working", len)
-    // }
+            
+            
+            
+            
+            
+        }
+            
+            
+            
+            console.log("func is working", len)
+            // }
 }
 
 
@@ -451,6 +472,15 @@ function handlerange (x:number, y: number){
     if(arr.length>0){
         //@ts-ignore
         setdata(arr)
+         //@ts-ignore
+        setarr3(arr)
+
+        setlen1(arr.length)
+    }
+
+    else{
+        setdata(arr2)
+        setuse(false)
     }
     
 }
