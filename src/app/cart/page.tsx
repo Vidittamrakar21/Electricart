@@ -88,17 +88,15 @@ export default function Cart() {
                     isloading(false)
                     setdata([])
                     fetchcart(0)
-
+                  
                     console.log(x)
                 }
             })
         }
     }
 
-    useEffect(()=>{
-        fetchcart(0)
 
-    },[])
+   
 
     const movepayment = () => {
         router.push('/checkout')
@@ -109,19 +107,75 @@ export default function Cart() {
     }
 
 
-    const [itemprice , setprice ] = useState(0);
-    const [discount , setdiscount ] = useState(0);
 
+    const [itemprice , setprice ] = useState<number[]>([]);
+    const [discount , setdiscount ] = useState<number[]>([]);
+    const [worked1 , isworking1] = useState(false)
+    const [worked2 , isworking2] = useState(false)
     const settingprice = (x: number) => {
         
-            setprice( x)
+           if(!worked1){
+            const index  = itemprice.indexOf(x);
+            if(index === -1 && x !== undefined){
+
+                itemprice.push(x)
+                setprice(itemprice)
+                console.log(itemprice)
+                isworking1(true)
+                if(data.length === itemprice.length){
+                    findallamount()
+                }
+            }
+           }
 
        
     }
 
     const discountprice = (x: number) => {
-       setdiscount( x)
+        if(!worked2){
+            const index  = discount.indexOf(x);
+            if(index === -1 && x !== undefined){
+
+                discount.push(x)
+                setdiscount(discount)
+                console.log(discount)
+                isworking2(true)
+                if(data.length === discount.length){
+                    findalldiscount()
+                }
+               
+            }
+           }
     }
+
+    const [pricing , setpricing] = useState(0)
+    const [discounting , setdiscounting] = useState(0)
+
+
+    function findallamount (){
+
+       if(itemprice.length>0){
+        itemprice.forEach((item)=>{
+           setpricing((x)=> x + item)
+        })
+       }
+    }
+
+    function findalldiscount (){
+
+       if(discount.length>0){
+        discount.forEach((item)=>{
+           setdiscounting((x)=> x + item)
+        })
+       }
+    }
+
+
+    useEffect(()=>{
+        fetchcart(0)
+        // findallamount()
+
+    },[])
 
     return (
         <div className="min-h-[650px] flex flex-col justify-start items-center select-none">
@@ -166,13 +220,13 @@ export default function Cart() {
 
                      <div className="flex flex-row  justify-between items-center h-[45px] w-[380px] sm1:w-[320px] ">
                      <h2 >Price ({data.length} item)</h2>
-                     <h2>&#8377;{itemprice}</h2>
+                     <h2>&#8377;{pricing}</h2>
 
                      </div>
 
                      <div className="flex flex-row justify-between items-center h-[45px] w-[380px]  sm1:w-[320px]">
                      <h2>Discount</h2>
-                     <h2 className="text-[green]">-&#8377;{discount}</h2>
+                     <h2 className="text-[green]">-&#8377;{discounting}</h2>
 
                      </div>
 
@@ -187,12 +241,12 @@ export default function Cart() {
 
                      <div className="flex flex-row justify-between items-center h-[45px] w-[380px] sm1:w-[320px]">
                      <h2 className="text-[18px] font-[500]">Total Amount</h2>
-                     <h2 className="text-[18px] font-[500]">&#8377;{itemprice - discount}</h2>
+                     <h2 className="text-[18px] font-[500]">&#8377;{pricing-discounting}</h2>
 
                      </div>
 
                      <div className="flex flex-row justify-start items-center h-[45px] w-[380px] sm1:w-[320px]">
-                     <h1 className="text-[green]">You will save &#8377;{discount} on this order </h1>
+                     <h1 className="text-[green]">You will save &#8377;{discounting} on this order </h1>
 
                      </div>
 
