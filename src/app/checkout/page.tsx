@@ -48,6 +48,7 @@ export default function Checkout() {
     const area = useRef<HTMLTextAreaElement>(null)
     const city = useRef<HTMLInputElement>(null)
     const state = useRef<HTMLSelectElement>(null)
+    const digit = useRef<HTMLInputElement>(null)
     
 
     const [itemcount , setcount ] = useState(1);
@@ -66,7 +67,8 @@ export default function Checkout() {
     const [ adbox , isadbox] = useState(false)
     const [ gate , isgate] = useState(true)
     const [ cod , iscod] = useState(false)
-
+    const [confirm, setconfirm] = useState(false)
+ 
     const showadbox = () =>{
         isadbox(true)
     }
@@ -79,6 +81,7 @@ export default function Checkout() {
         if(!gate && cod){
             isgate(true)
             iscod(false)
+            setconfirm(false)
 
         }
        
@@ -88,6 +91,7 @@ export default function Checkout() {
         if(!cod && gate){
             isgate(false)
             iscod(true)
+            setconfirm(true)
 
         }
        
@@ -180,7 +184,9 @@ export default function Checkout() {
             })
             //@ts-ignore
             setarr(updatedItems)
-           
+
+           const i =  updatedItems.length - 1
+           isradio(i)
         })
 
 
@@ -311,16 +317,51 @@ export default function Checkout() {
         })
        }
     }
-
+    const [radio , isradio] = useState<string| number>("")
+    
     function ty (){
-      
-        console.log(arr)
+     if(arr.length>0){
+        const i = arr.length -1
+        console.log("radioo")
+        isradio(i)
+     }
+    }
+
+
+    const handleradio = (x:number) =>{
+        isradio(x)
+    }
+
+    const [random , setrandom] = useState(0);
+
+    const generaterandom = () =>{
+       const r =  Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+       setrandom(r)
+
+     
+    }
+
+    const [check , setcheck] = useState(true)
+
+    const confirmcod = ()=>{
+        // Number(digit.current?.value)
+        //@ts-ignore
+        if(random ===   Number(digit.current?.value)){
+           
+            setcheck(true)
+        }
+        else{
+            setcheck(false)
+            generaterandom()
+            console.log(digit.current?.value,typeof(digit.current?.value))
+            console.log(random,typeof(random))
+        }
     }
     
     useEffect(()=>{
         fetchaddress()
         fetchcart(0)
-      
+        generaterandom()
     },[])
 
     return (
@@ -347,7 +388,7 @@ export default function Checkout() {
 
                           {arr.map((item: addtype, index : number)=>(
                               <div key={index} className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 min-h-[65px] w-[750px] sm1:w-[300px] border-b-[1px] border-b-[#a8a8a8]">
-                              <input type="radio" checked={arr.length === 1?true:(arr.length)-1 === index? true : false} />
+                              <input onClick={()=>{handleradio(index)}} type="radio" checked={radio === index?true: false} />
                               <div className=" ml-3 flex flex-col justify-start items-start cursor-pointer   min-h-[55px] w-[550px] sm1:w-[290px]">
                                         <h1 className="font-[500]">{item.name} &nbsp; &nbsp;  &nbsp;  &nbsp;  &nbsp;          {item.mobile}</h1>
                                         <h2 className="">{item.area},{item.local}, {item.city}, {item.state}  &nbsp;  <span className="font-[500]">-{item.pincode}</span></h2>
@@ -451,7 +492,7 @@ export default function Checkout() {
 
                                 </div>
 
-                            <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 h-[65px] w-[750px] sm1:w-[300px]">
+                            <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 min-h-[65px] w-[750px] sm1:w-[300px]">
                                      <div className="h-[55px] w-[30px]">
                                      <input type="radio" checked={cod} onClick={choseoptb}/>
                                      </div>
@@ -460,6 +501,23 @@ export default function Checkout() {
                                                
                                       </div>
 
+                                    
+
+                                </div>
+
+                                <div className={confirm?"flex items-center justify-center min-h-[100px] w-[550px] sm1:w-[320px] border ml-2 mb-3  border-[#525252]  sm1:flex-col":"hidden"}>
+                                      <div className="flex items-center justify-center">
+                                      <div className="flex items-center justify-center font-shaw text-[70px] sm1:text-[45px] italic  h-[70px] sm1:h-[50px] w-[120px] border border-[#8d8d8d] sm1:mt-2 text-green-500 font-bold">{random}</div>
+                                       <div className="ml-2 cursor-pointer select-none" onClick={generaterandom}>
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="grey" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                         <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                        </svg>
+                                       </div>
+                                      </div>
+                                    
+                                    <input ref={digit} type="number" className={check?"h-[40px] w-[180px] text-[20px] ml-2 sm1:mt-2  sm1:ml-0 border border-[gray]": "h-[40px] w-[180px] text-[20px] ml-2 sm1:mt-2  sm1:ml-0  border-[#fa3939] border-[2px]"}   placeholder="&nbsp; Enter The Digits "/>
+                                    <button onClick={confirmcod} className="h-[40px] w-[130px] bg-[#eb6a2e] ml-2 text-[white] sm1:mt-2 sm1:mb-2 sm1:ml-0 sm1:w-[180px] cursor-pointer ">Confirm Order</button>
                                 </div>
                   
 
@@ -508,7 +566,7 @@ export default function Checkout() {
                     </div>
 
 
-                        <button className="h-[40px] w-[180px] bg-[#eb6a2e] text-[white] relative top-[10px] cursor-pointer left-[0px]" >Continue</button>
+                        <button className={ !confirm?"h-[40px] w-[180px] bg-[#eb6a2e] text-[white] relative top-[10px] cursor-pointer left-[0px]": "hidden"} >Continue</button>
                 </div>
             </div>
         </div>

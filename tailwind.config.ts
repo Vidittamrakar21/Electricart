@@ -43,7 +43,11 @@ const config: Config = {
       , 
       screens: {
         'sm1' : {'max':  '600px'}
-      }
+      },
+
+      fontFamily: {
+        shaw: ["Zilla Slab", "serif"],
+      },
     },
   },
   plugins: [],

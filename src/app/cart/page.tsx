@@ -122,7 +122,7 @@ export default function Cart() {
                 setprice(itemprice)
                 console.log(itemprice)
                 isworking1(true)
-                if(data.length === itemprice.length){
+                if(itemprice.length >= data.length){
                     findallamount()
                 }
             }
@@ -131,7 +131,7 @@ export default function Cart() {
        
     }
 
-    const discountprice = (x: number) => {
+    const discountprice = async (x: number) => {
         if(!worked2){
             const index  = discount.indexOf(x);
             if(index === -1 && x !== undefined){
@@ -152,7 +152,7 @@ export default function Cart() {
     const [discounting , setdiscounting] = useState(0)
 
 
-    function findallamount (){
+    function findallamount  (){
 
        if(itemprice.length>0){
         itemprice.forEach((item)=>{

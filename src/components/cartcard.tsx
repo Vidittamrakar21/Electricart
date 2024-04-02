@@ -96,6 +96,8 @@ export default function Cardcart(props:propstype){
         setcount(item => item + 1)
         //@ts-ignore
         setprice(data?.price * (itemcount+1))
+        //@ts-ignore
+        props.fetchprice(data?.originalprice)
     
     }
 

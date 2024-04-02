@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -17,8 +16,8 @@
 }
 
 body {
-
- background-color: rgb(228, 228, 228);
+  
+  background-color: rgb(228, 228, 228);
 }
 
 @layer utilities {
@@ -26,3 +25,5 @@ body {
     text-wrap: balance;
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap')
