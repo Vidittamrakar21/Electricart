@@ -40,7 +40,25 @@ export default function Product () {
     const id = searchParams.get('id')
 
     const movepayment = () => {
-        router.push('/checkout')
+        const uuid = Cookies.get('uid')
+        const rftoken = Cookies.get('RF_TOKEN')
+       if(id && rftoken){
+
+           gqclient.mutate({
+               mutation: UPDATE_CART,
+               variables: {
+                   uid: uuid,
+                   pid: id
+                }
+            }).then((res)=>{
+                if(res.data.addcart){
+                   router.push('/checkout')
+                }
+            })
+        }
+        else{
+            router.push('/sign')
+        } 
     }
     const movecart = () => {
         router.push('/cart')

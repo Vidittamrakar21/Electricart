@@ -4,7 +4,7 @@ import {  useState , useRef, useEffect} from "react"
 import { gql } from "@apollo/client";
 import { gqclient } from "../sign/page";
 import Cookies from "js-cookie";
-import { it } from "node:test";
+import Cardcart from "@/components/cartcard";
 
 const UP_ADD = gql`
 
@@ -19,11 +19,25 @@ mutation Mutation($uid: String) {
     findoneuser(uid: $uid) {
       
       address
+      cart
       
     }
   }
 
 `
+
+
+
+const removecart = gql`
+
+mutation Mutation($uid: String, $pid: String) {
+
+    rmcart(uid: $uid, pid: $pid)
+  }
+
+
+`
+
 
 export default function Checkout() {
 
@@ -172,6 +186,132 @@ export default function Checkout() {
 
     }
 
+
+   
+
+
+
+
+    
+
+    const id = Cookies.get('uid');
+
+    const [data, setdata] = useState([])
+    const [loading, isloading] = useState(false)
+
+    const fetchcart = async (x: number)=>{
+        isloading(true)
+       
+
+        if(id){
+          await  gqclient.mutate({
+                mutation: finduser,
+                variables: {
+                    uid: id
+                }
+            }).then((res)=>{
+
+                if(res.data.findoneuser.cart){
+                    setdata(res.data.findoneuser.cart)
+                    isloading(false)
+                    Cookies.set('cart',(res.data.findoneuser.cart).length )
+                }
+
+                else{
+                    isloading(true)
+                }
+
+               
+                console.log("fetch worked")
+            })
+        }
+        
+    }
+
+    const removeitem = async (x: string) => {
+        isloading(true)
+        if(id){
+           await gqclient.mutate({
+                mutation: removecart,
+                variables: {
+                    uid: id,
+                    pid: x
+                }
+            }).then((res)=> {
+                if(res.data.rmcart){
+                    isloading(false)
+                    setdata([])
+                    fetchcart(0)
+                  
+                    console.log(x)
+                }
+            })
+        }
+    }
+
+
+    const [itemprice , setprice ] = useState<number[]>([]);
+    const [discount , setdiscount ] = useState<number[]>([]);
+    const [worked1 , isworking1] = useState(false)
+    const [worked2 , isworking2] = useState(false)
+    const settingprice = (x: number) => {
+        
+           if(!worked1){
+            const index  = itemprice.indexOf(x);
+            if(index === -1 && x !== undefined){
+
+                itemprice.push(x)
+                setprice(itemprice)
+                console.log(itemprice)
+                isworking1(true)
+                if(data.length === itemprice.length){
+                    findallamount()
+                }
+            }
+           }
+
+       
+    }
+
+    const discountprice = (x: number) => {
+        if(!worked2){
+            const index  = discount.indexOf(x);
+            if(index === -1 && x !== undefined){
+
+                discount.push(x)
+                setdiscount(discount)
+                console.log(discount)
+                isworking2(true)
+                if(data.length === discount.length){
+                    findalldiscount()
+                }
+               
+            }
+           }
+    }
+
+    const [pricing , setpricing] = useState(0)
+    const [discounting , setdiscounting] = useState(0)
+
+
+    function findallamount (){
+
+       if(itemprice.length>0){
+        itemprice.forEach((item)=>{
+           setpricing((x)=> x + item)
+        })
+       }
+    }
+
+    function findalldiscount (){
+
+       if(discount.length>0){
+        discount.forEach((item)=>{
+           setdiscounting((x)=> x + item)
+        })
+       }
+    }
+
     function ty (){
       
         console.log(arr)
@@ -179,6 +319,7 @@ export default function Checkout() {
     
     useEffect(()=>{
         fetchaddress()
+        fetchcart(0)
       
     },[])
 
@@ -290,38 +431,10 @@ export default function Checkout() {
 
 
                     {/* cart item */}
+                    {data.map((item: string, index: number)=>(
+                     <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice}></Cardcart>
+                   ))}
 
-                    <div className="h-[220px] w-[780px] mt-[34px] bg-[white] flex flex-row justify-center items-center border sm1:w-[340px]">
-                            <div className="h-[150px] w-[150px] sm1:h-[100px] sm1:w-[100px]">
-                                <img className="h-[100%] w-[100%]" src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/refurb-mbp14-space-m1-2021_GEO_CH?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1638575280000" alt="" />
-                            </div>
-                            <div className="h-[150px] w-[600px] flex flex-col justify-center items-start ml-4 sm1:w-[200px] sm1:h-[100]">
-                               <div className="flex flex-row justify-center items-center"> 
-                                <h2 className="sm1:text-[13px]">Macbook 15.5inch 16gb 512ssd</h2>
-                               <h2 className="text-[14px] ml-5 sm1:text-[12px]">Delivery by Monday Feb 19</h2>
-                               </div>
-
-                               <h3 className="text-[14px] text-[gray] sm1:text-[12px]">Seller: Apple</h3>
-
-                               <div className="flex flex-row justify-center items-center">
-                                        <h5 className=" line-through text-[14px] text-[gray]">&#8377; 1,06,580</h5>
-                                        <h2 className="text-[17px] font-[600] ml-2">&#8377; 98,000</h2>
-                                        <h2 className="  text-[14px] ml-2 text-[green] sm1:text-[13px]">17% Off 1 coupon & 1 offer applied</h2>
-                               </div>
-
-                               <div className="flex flex-row justify-center items-center mt-5">
-                                        <div className="flex flex-row justify-evenly w-[120px] items-center">
-                                            <div className="h-[23px] w-[23px] border border-[#6d6c6c] rounded-[50%] flex flex-row justify-center items-center" onClick={decrementcount}>-</div>
-                                            <div className="h-[25px] w-[40px]   border border-[#6d6c6c] flex flex-row justify-center items-center">{itemcount}</div>
-                                            <div className="h-[23px] w-[23px] border border-[#6d6c6c] rounded-[50%] flex flex-row justify-center items-center" onClick={incrementcount}>+</div>
-                                        </div>
-
-                                        <h1 className="text-[18px] text-[500] ml-2 cursor-pointer">Remove</h1>
-                               </div>
-
-                            </div>
-
-                    </div>
 
                     <div className=" mt-4 h-[40px] w-[800px] flex flex-col justify-center items-start bg-[#4C3F91] text-[white] sm1:w-[340px]">
                                 <h1 className="ml-2">Payment Options</h1>
@@ -363,14 +476,14 @@ export default function Checkout() {
                     </div>
                     
                     <div className="flex flex-row  justify-between items-center h-[45px] w-[380px] sm1:w-[320px] ">
-                    <h2 >Price (1 item)</h2>
-                    <h2>&#8377;1,06,580</h2>
+                    <h2 >Price ({data.length} item)</h2>
+                    <h2>&#8377;{pricing}</h2>
 
                     </div>
 
                     <div className="flex flex-row justify-between items-center h-[45px] w-[380px]  sm1:w-[320px]">
                     <h2>Discount</h2>
-                    <h2 className="text-[green]">-&#8377;8580</h2>
+                    <h2 className="text-[green]">-&#8377;{discounting}</h2>
 
                     </div>
 
@@ -385,12 +498,12 @@ export default function Checkout() {
 
                     <div className="flex flex-row justify-between items-center h-[45px] w-[380px] sm1:w-[320px]">
                     <h2 className="text-[18px] font-[500]">Amount Payable</h2>
-                    <h2 className="text-[18px] font-[500]">&#8377;98,000</h2>
+                    <h2 className="text-[18px] font-[500]">&#8377;{pricing - discounting}</h2>
 
                     </div>
 
                     <div className="flex flex-row justify-start items-center h-[45px] w-[380px] sm1:w-[320px]">
-                    <h1 className="text-[green]">You will save &#8377;8580 on this order </h1>
+                    <h1 className="text-[green]">You will save &#8377;{discounting} on this order </h1>
 
                     </div>
 
