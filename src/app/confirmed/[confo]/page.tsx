@@ -1,5 +1,5 @@
 "use client"
-import {useRouter} from 'next/navigation'
+import {useRouter, useSearchParams} from 'next/navigation'
 
 
 export default function Confirmed (){
@@ -10,6 +10,8 @@ export default function Confirmed (){
     const month = fulldate.getMonth();
   
     const router = useRouter();
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
    
 
     const getday = (x:number) => {
@@ -97,7 +99,7 @@ export default function Confirmed (){
                 </div>
                 <h1 className="text-[20px]">Your Order is Confirmed !</h1>
                 <h3 className="mt-2 text-[green]">Will be {getdeliverydate(day+5,month,date+5)}</h3>
-                <h3 className="mt-2 text-[green]">Order Id: 5sd515dg54eg5851df</h3>
+                <h3 className="mt-2 text-[green]">Order Id: {id}</h3>
                 <div className="h-[50px] w-[380px] sm1:w-[320px] mt-5 flex justify-center items-center cursor-pointer select-none">
                    <button onClick={movetoorder} className="h-[35px] w-[120px]  mt-5 bg-[#FB641B] text-[white] text-[15px]">Check Order</button>
                    <button onClick={movetohome}  className="h-[35px] w-[120px] ml-5 mt-5 bg-[white] text-[black] border border-[#acacac] text-[15px]">Ok</button>

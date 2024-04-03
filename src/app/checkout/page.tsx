@@ -1,11 +1,12 @@
 "use client"
 
-import {  useState , useRef, useEffect} from "react"
+import {  useState , useRef, useEffect, CSSProperties} from "react"
 import { gql } from "@apollo/client";
 import { gqclient } from "../sign/page";
 import Cookies from "js-cookie";
 import Cardcart from "@/components/cartcard";
 import { useRouter } from "next/navigation";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const UP_ADD = gql`
 
@@ -37,8 +38,34 @@ mutation Mutation($uid: String, $pid: String) {
   }
 
 
+
 `
 
+const confirmorder = gql`
+
+mutation Mutation($uid: String, $pid: [String], $totalprice: Float, $totalitems: Float, $paymentmode: String, $paymentstatus: String, $orderstatus: String, $deliveryaddress: String) {
+    createorder(uid: $uid, pid: $pid, totalprice: $totalprice, totalitems: $totalitems, paymentmode: $paymentmode, paymentstatus: $paymentstatus, orderstatus: $orderstatus, deliveryaddress: $deliveryaddress)
+  }
+
+`
+
+const emptycart = gql`
+mutation Mutation($uid: String) {
+    clearcart(uid: $uid)
+  }
+
+`
+const override1: CSSProperties = {
+    position: "relative",
+    top: "10px",
+    left: "60px"
+  };
+
+const override2: CSSProperties = {
+    position: "relative",
+    top: "10px",
+    left: "0px"
+  };
 
 export default function Checkout() {
 
@@ -71,6 +98,8 @@ export default function Checkout() {
     const [ gate , isgate] = useState(true)
     const [ cod , iscod] = useState(false)
     const [confirm, setconfirm] = useState(false)
+    const [paymentmethod, setpaymethod] = useState("")
+
  
     const showadbox = () =>{
         isadbox(true)
@@ -85,6 +114,7 @@ export default function Checkout() {
             isgate(true)
             iscod(false)
             setconfirm(false)
+            setpaymethod("Razorpay")
 
         }
        
@@ -95,6 +125,7 @@ export default function Checkout() {
             isgate(false)
             iscod(true)
             setconfirm(true)
+            setpaymethod("COD")
 
         }
        
@@ -190,6 +221,8 @@ export default function Checkout() {
 
            const i =  updatedItems.length - 1
            isradio(i)
+           //@ts-ignore
+           setadr(JSON.stringify(updatedItems[updatedItems.length - 1]))
         })
 
 
@@ -207,6 +240,7 @@ export default function Checkout() {
 
     const [data, setdata] = useState([])
     const [loading, isloading] = useState(false)
+    const [oloading, setoloading] = useState(false)
 
     const fetchcart = async (x: number)=>{
         isloading(true)
@@ -321,6 +355,7 @@ export default function Checkout() {
        }
     }
     const [radio , isradio] = useState<string| number>("")
+    const [adr , setadr] = useState<string>("")
     
     function ty (){
      if(arr.length>0){
@@ -331,8 +366,10 @@ export default function Checkout() {
     }
 
 
-    const handleradio = (x:number) =>{
+    const handleradio = (x:number, y: object) =>{
         isradio(x)
+        setadr(JSON.stringify(y))
+
     }
 
     const [random , setrandom] = useState(0);
@@ -345,15 +382,57 @@ export default function Checkout() {
     }
 
     const [check , setcheck] = useState(true)
+    const [paystatus , setstatus] = useState("yet to be paid")
 
-    const confirmcod = ()=>{
-        // Number(digit.current?.value)
-        //@ts-ignore
-        if(random ===   Number(digit.current?.value)){
+    const orderdata = {
+        uid: id,
+        pid: data,
+        totalprice: pricing-discounting,
+        totalitems: data.length,
+    
+        paymentmode: paymentmethod,
+        paymentstatus: paystatus,
+        orderstatus: "Order Placed",
+        deliveryaddress: adr
+        
+    }
+
+    const confirmcod = async ()=>{
+       if(arr.length>0){
+         //@ts-ignore
+         if(random ===   Number(digit.current?.value)){
            
             setcheck(true)
-            router.push('/confirmed')
-            
+           setoloading(true)
+           
+            // console.log(orderdata)
+
+            await gqclient.mutate({
+                mutation: confirmorder,
+                variables: orderdata
+
+
+                
+            }).then(async (res)=> {
+                if(res.data.createorder){
+                    await gqclient.mutate({
+                        mutation: emptycart,
+                        variables: {
+                            uid: id
+                        }
+                    }).then((rs)=>{
+
+                        if(rs.data.clearcart === "updated"){
+                            router.push(`/confirmed/confo?id=${res.data.createorder}`)
+                            setoloading(false)
+                        }
+                    })
+
+
+                     
+                }
+            })
+
            
         }
         else{
@@ -362,13 +441,22 @@ export default function Checkout() {
               //@ts-ignore
               digit.current.value = ""
         }
+       }
+
+       else{
+        alert("Kindly add a Delivery Address !")
+       }
+       
     }
+
+   
     
     useEffect(()=>{
         fetchaddress()
         fetchcart(0)
         generaterandom()
     },[])
+
 
     return (
         <div className="min-h-[650px] flex flex-col justify-start items-center select-none">
@@ -394,7 +482,7 @@ export default function Checkout() {
 
                           {arr.map((item: addtype, index : number)=>(
                               <div key={index} className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 min-h-[65px] w-[750px] sm1:w-[300px] border-b-[1px] border-b-[#a8a8a8]">
-                              <input onClick={()=>{handleradio(index)}} type="radio" checked={radio === index?true: false} />
+                              <input onClick={()=>{handleradio(index,item)}} type="radio" checked={radio === index?true: false} />
                               <div className=" ml-3 flex flex-col justify-start items-start cursor-pointer   min-h-[55px] w-[550px] sm1:w-[290px]">
                                         <h1 className="font-[500]">{item.name} &nbsp; &nbsp;  &nbsp;  &nbsp;  &nbsp;          {item.mobile}</h1>
                                         <h2 className="">{item.area},{item.local}, {item.city}, {item.state}  &nbsp;  <span className="font-[500]">-{item.pincode}</span></h2>
@@ -482,12 +570,13 @@ export default function Checkout() {
                      <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice}></Cardcart>
                    ))}
 
+                    <ClipLoader color="#36d7b7" loading={loading} size={40} cssOverride={override1}/>
 
                     <div className=" mt-4 h-[40px] w-[800px] flex flex-col justify-center items-start bg-[#4C3F91] text-[white] sm1:w-[340px]">
                                 <h1 className="ml-2">Payment Options</h1>
                             </div>
 
-                            <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 h-[65px] w-[750px] sm1:w-[300px]">
+                            <div onClick={choseopta} className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 h-[65px] w-[750px] sm1:w-[300px]">
                                      <div className="h-[55px] w-[30px]">
                                      <input type="radio" checked={gate} onClick={choseopta}/>
                                      </div>
@@ -498,7 +587,7 @@ export default function Checkout() {
 
                                 </div>
 
-                            <div className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 min-h-[65px] w-[750px] sm1:w-[300px]">
+                            <div onClick={choseoptb} className=" mt-2 flex flex-row justify-start items-center cursor-pointer  ml-4 min-h-[65px] w-[750px] sm1:w-[300px]">
                                      <div className="h-[55px] w-[30px]">
                                      <input type="radio" checked={cod} onClick={choseoptb}/>
                                      </div>
@@ -524,6 +613,7 @@ export default function Checkout() {
                                     
                                     <input ref={digit} type="number" className={check?"h-[40px] w-[180px] text-[20px] ml-2 sm1:mt-2  sm1:ml-0 border border-[gray]": "h-[40px] w-[180px] text-[20px] ml-2 sm1:mt-2  sm1:ml-0  border-[#fa3939] border-[2px]"}   placeholder="&nbsp; Enter The Digits "/>
                                     <button onClick={confirmcod} className="h-[40px] w-[130px] bg-[#eb6a2e] ml-2 text-[white] sm1:mt-2 sm1:mb-2 sm1:ml-0 sm1:w-[180px] cursor-pointer ">Confirm Order</button>
+                                    <ClipLoader color="#36d7b7" loading={oloading} size={40} cssOverride={override2}/>
                                 </div>
                   
 
