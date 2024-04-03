@@ -5,6 +5,7 @@ import { gql } from "@apollo/client";
 import { gqclient } from "../sign/page";
 import Cookies from "js-cookie";
 import Cardcart from "@/components/cartcard";
+import { useRouter } from "next/navigation";
 
 const UP_ADD = gql`
 
@@ -52,6 +53,8 @@ export default function Checkout() {
     
 
     const [itemcount , setcount ] = useState(1);
+
+    const router = useRouter();
 
     const incrementcount = () => {
         setcount(item => item + 1)
@@ -349,12 +352,15 @@ export default function Checkout() {
         if(random ===   Number(digit.current?.value)){
            
             setcheck(true)
+            router.push('/confirmed')
+            
+           
         }
         else{
             setcheck(false)
             generaterandom()
-            console.log(digit.current?.value,typeof(digit.current?.value))
-            console.log(random,typeof(random))
+              //@ts-ignore
+              digit.current.value = ""
         }
     }
     

@@ -84,7 +84,7 @@ export default function Recentcard (props: propstype){
                 <img className="min-h-[50%] max-h-[100%] min-w-[50%] max-w-[100%]" src={data?.image} alt="" />
             </div>
             
-            <h2 className=" mt-3 text-[#070707] ml-1 sm1:text-[14px]" >{truncateTitle(data?.title,6)}</h2>
+            <h2 className=" mt-3 text-[#070707] ml-1 sm1:text-[14px]" >{truncateTitle(data?.title,5)}</h2>
             <h3 className="mt-2 ml-1">&#8377; {data?.price}</h3>
         </div>
         
