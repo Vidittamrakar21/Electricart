@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 import { client } from "@/app/client";
 import Cookies from "js-cookie";
 import { gqclient } from "@/app/sign/page";
+import { cookies } from "next/headers";
 type propstype = {
     id: string
     rmitem: (x: string) => void
@@ -23,6 +24,7 @@ mutation Mutation($uid: String, $pid: String) {
 export default function Cardcart(props:propstype){
 
     const id = Cookies.get('uid');
+  
 
     
     
@@ -98,6 +100,11 @@ export default function Cardcart(props:propstype){
         setprice(data?.price * (itemcount+1))
         //@ts-ignore
         props.fetchprice(data?.originalprice)
+
+      
+
+        
+        
     
     }
 

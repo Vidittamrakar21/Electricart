@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import Cardcart from "@/components/cartcard";
 import { useRouter } from "next/navigation";
 import ClipLoader from "react-spinners/ClipLoader";
+import axios from "axios";
 
 const UP_ADD = gql`
 
@@ -98,7 +99,7 @@ export default function Checkout() {
     const [ gate , isgate] = useState(true)
     const [ cod , iscod] = useState(false)
     const [confirm, setconfirm] = useState(false)
-    const [paymentmethod, setpaymethod] = useState("")
+    const [paymentmethod, setpaymethod] = useState("Razorpay")
 
  
     const showadbox = () =>{
@@ -237,6 +238,8 @@ export default function Checkout() {
     
 
     const id = Cookies.get('uid');
+
+
 
     const [data, setdata] = useState([])
     const [loading, isloading] = useState(false)
@@ -448,6 +451,93 @@ export default function Checkout() {
        }
        
     }
+
+    function loadScript(src:string) {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = src;
+            script.onload = () => {
+                resolve(true);
+            };
+            script.onerror = () => {
+                resolve(false);
+            };
+            document.body.appendChild(script);
+        });
+}
+
+    const getpay = async () =>{
+
+        setstatus("Paid")
+
+        const res = await loadScript(
+            "https://checkout.razorpay.com/v1/checkout.js"
+        );
+
+
+        const data = await (await axios.post('https://electricart-order-server.vercel.app/api/payment/checkout', {amt: pricing-discounting})).data;
+        const {order, key} = data;
+        
+        const options = {
+          key: key, 
+          amount: order.amount, 
+          currency: "INR",
+          name: "Electricart",
+          description: "Test Transaction",
+          image: "https://example.com/your_logo",
+          order_id: order.id, 
+          callback_url: `/confirmed/confo?id=${order.id}`,
+          prefill: {
+              name: "Vidit tamrakar",
+              email: "vidit.tamrakar@example.com",
+              contact: "9000090000"
+          },
+          notes: {
+              "address": "Razorpay Corporate Office"
+          },
+          theme: {
+              "color": "#4C3F91"
+          }
+      };
+      //@ts-ignore
+      var rzp1 = new window.Razorpay(options);
+     
+          if(rzp1.open()){
+
+            await gqclient.mutate({
+                mutation: confirmorder,
+                variables: orderdata
+
+
+                
+            }).then(async (res)=> {
+                if(res.data.createorder){
+                    await gqclient.mutate({
+                        mutation: emptycart,
+                        variables: {
+                            uid: id
+                        }
+                    }).then((rs)=>{
+
+                        if(rs.data.clearcart === "updated"){
+                            
+                           
+                        }
+                    })
+
+
+                     
+                }
+            })
+
+            
+          }
+  
+          
+      
+      
+      }
+  
 
    
     
@@ -662,7 +752,7 @@ export default function Checkout() {
                     </div>
 
 
-                        <button className={ !confirm?"h-[40px] w-[180px] bg-[#eb6a2e] text-[white] relative top-[10px] cursor-pointer left-[0px]": "hidden"} >Continue</button>
+                        <button onClick={getpay} className={ !confirm?"h-[40px] w-[180px] bg-[#eb6a2e] text-[white] relative top-[10px] cursor-pointer left-[0px]": "hidden"} >Continue</button>
                 </div>
             </div>
         </div>
