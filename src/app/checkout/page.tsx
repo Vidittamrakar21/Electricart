@@ -44,8 +44,8 @@ mutation Mutation($uid: String, $pid: String) {
 
 const confirmorder = gql`
 
-mutation Mutation($uid: String, $pid: [String], $totalprice: Float, $totalitems: Float, $paymentmode: String, $paymentstatus: String, $orderstatus: String, $deliveryaddress: String) {
-    createorder(uid: $uid, pid: $pid, totalprice: $totalprice, totalitems: $totalitems, paymentmode: $paymentmode, paymentstatus: $paymentstatus, orderstatus: $orderstatus, deliveryaddress: $deliveryaddress)
+mutation Mutation($uid: String, $pid: [String], $totalprice: Float, $totalitems: Float, $paymentmode: String, $paymentstatus: String, $orderstatus: String, $deliveryaddress: String, $image: String) {
+    createorder(uid: $uid, pid: $pid, totalprice: $totalprice, totalitems: $totalitems, paymentmode: $paymentmode, paymentstatus: $paymentstatus, orderstatus: $orderstatus, deliveryaddress: $deliveryaddress, image: $image)
   }
 
 `
@@ -384,19 +384,40 @@ export default function Checkout() {
      
     }
 
+    const [img, setimg] = useState("")
+
+    const getimage = (x:string)=>{
+        setimg(x)
+        console.log("img", x)
+    }
+
     const [check , setcheck] = useState(true)
-    const [paystatus , setstatus] = useState("yet to be paid")
+    const [razorpaystatus , setrazor] = useState("Paid")
+    const [codstatus , setcod] = useState("Yet to be paid")
+
+    const upiorderdata = {
+        uid: id,
+        pid: data,
+        totalprice: pricing-discounting,
+        totalitems: data.length,
+        paymentmode: paymentmethod,
+        paymentstatus: razorpaystatus,
+        orderstatus: "Order Placed",
+        deliveryaddress: adr,
+        image: img
+        
+    }
 
     const orderdata = {
         uid: id,
         pid: data,
         totalprice: pricing-discounting,
         totalitems: data.length,
-    
         paymentmode: paymentmethod,
-        paymentstatus: paystatus,
+        paymentstatus: codstatus,
         orderstatus: "Order Placed",
-        deliveryaddress: adr
+        deliveryaddress: adr,
+        image: img
         
     }
 
@@ -426,6 +447,8 @@ export default function Checkout() {
                     }).then((rs)=>{
 
                         if(rs.data.clearcart === "updated"){
+                            //@ts-ignore
+                             Cookies.set('cart', 0 )
                             router.push(`/confirmed/confo?id=${res.data.createorder}`)
                             setoloading(false)
                         }
@@ -439,6 +462,7 @@ export default function Checkout() {
            
         }
         else{
+            console.log(orderdata)
             setcheck(false)
             generaterandom()
               //@ts-ignore
@@ -468,7 +492,7 @@ export default function Checkout() {
 
     const getpay = async () =>{
 
-        setstatus("Paid")
+    
 
         const res = await loadScript(
             "https://checkout.razorpay.com/v1/checkout.js"
@@ -506,7 +530,7 @@ export default function Checkout() {
 
             await gqclient.mutate({
                 mutation: confirmorder,
-                variables: orderdata
+                variables: upiorderdata
 
 
                 
@@ -657,7 +681,7 @@ export default function Checkout() {
 
                     {/* cart item */}
                     {data.map((item: string, index: number)=>(
-                     <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice}></Cardcart>
+                     <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice} setimg={getimage}></Cardcart>
                    ))}
 
                     <ClipLoader color="#36d7b7" loading={loading} size={40} cssOverride={override1}/>

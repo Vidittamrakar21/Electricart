@@ -172,6 +172,10 @@ export default function Cart() {
        }
     }
 
+    const getimage = (x:string)=>{
+       return
+    }
+
 
     useEffect(()=>{
         fetchcart(0)
@@ -202,7 +206,7 @@ export default function Cart() {
                     {/* cart item */}
 
                    {data.map((item: string, index: number)=>(
-                     <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice}></Cardcart>
+                     <Cardcart key={index} id={item} rmitem = {removeitem} fetchprice={settingprice} fetchdiscount= {discountprice} setimg={getimage}></Cardcart>
                    ))}
 
 

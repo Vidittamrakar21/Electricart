@@ -1,6 +1,40 @@
 "use client"
 
-import { use, useState } from "react"
+import { useState , useEffect} from "react"
+import { gql } from "@apollo/client";
+import { gqclient } from "../sign/page";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
+const findallorders = gql`
+mutation Mutation($uid: String) {
+    orderfind(uid: $uid) {
+      uid
+      pid
+      totalprice
+      totalitems
+      paymentmode
+      paymentstatus
+      orderstatus
+      deliveryaddress
+      image
+    }
+  }
+`
+
+type ordertype = {
+    uid: string
+    pid: [string]
+    totalprice: number
+    totalitems: number
+    paymentmode: string
+    paymentstatus: string
+    orderstatus: string
+    deliveryaddress: string
+    image: string
+}
+
+
 
 export default function Order () {
 
@@ -10,6 +44,20 @@ export default function Order () {
     const [star4 , setstar4] = useState<boolean>(false);
     const [star5 , setstar5] = useState<boolean>(false);
     const [box , setbox] = useState<boolean>(false);
+    const [data , setdata] = useState([])
+    const id  = Cookies.get('uid')
+    const router = useRouter()
+    const fetchdata = async () =>{
+        gqclient.mutate({
+            mutation: findallorders,
+            variables: {
+                uid: id
+            }
+        }).then((res)=>{
+
+            setdata(res.data. orderfind)
+        })
+    }
 
     const handlestar1 = () => {
         setstar1(true)
@@ -62,60 +110,71 @@ export default function Order () {
         isopen(true)
     }
 
+    const movehome = ()=>{
+        router.push('/')
+    }
+
+
+    useEffect(()=>{
+        fetchdata()
+    },[])
+
     return (
-        <div className="min-h-[700px] w-[100%] flex justify-center items-center">
+        <div className="min-h-[700px] w-[100%] flex justify-center items-center flex-col">
                     {/* show when no order are there */}
-                {/* <div className="h-[400px] w-[1100px] bg-[white] mt-[85px] sm1:mt-[0px] flex flex-col justify-center items-center sm1:w-[340px]">
+                <div className={data.length=== 0?"h-[400px]  w-[1100px] bg-[white] mt-[255px] sm1:mt-[180px] flex flex-col justify-center items-center sm1:w-[340px]":"hidden"}>
                 <div className="h-[250px] w-[250px] ">
                     <img src="/images/box.png" className="h-[100%] w-[100%]" alt="" />
                 </div>
                 <h1 className="text-[18px]">Haven't received any order yet!</h1>
-                <button className="h-[35px] w-[180px] bg-[#4fb0d6] text-[white] mt-5 cursor-pointer">Shop Now</button>
-            </div> */}
+                <button onClick={movehome} className="h-[35px] w-[180px] bg-[#4fb0d6] text-[white] mt-5 cursor-pointer">Shop Now</button>
+            </div>
 
 
                 <div onClick={openlist} className={!open?"min-h-[300px] mt-[70px] sm1:mt-[70px] mb-[50px] w-[1000px] sm1:w-[340px] select-none flex flex-col justify-start items-center":"hidden"}>
 
                     {/* order component */}
-                          <div className="min-h-[120px] border w-[980px] sm1:w-[330px]   sm1:flex-col bg-[white] mt-[15px] shadow-lg flex flex-row justify-evenly items-center sm1:items-start sm1:justify-start sm1:h-[350px]"  >
-                          <div className="h-[80px] w-[80px] sm1:h-[120px] sm1:w-[120px] sm1:ml-2">
-                           <img className="h-[100%] w-[100%]" src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/refurb-mbp14-space-m1-2021_GEO_CH?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1638575280000" alt="" />
-                             </div>
-
-                             <div className="flex flex-col justify-center items-start  h-[110px] sm1:ml-2 sm1:h-[50px]">
-                             <h2 className=" mt-0 text-[black] ml-1" >2 item</h2>
-                              {/* <h4 className="text-[13px] text-[#808080] font-[400] ml-1">Gray,256gb</h4> */}
-                             </div>
-
-                             <div className="flex flex-col justify-center items-start  h-[110px] sm1:ml-2 sm1:h-[50px]">
-                             <h2 className=" mt-0 text-[black] ml-1" >Razorpay</h2>
-                              {/* <h4 className="text-[13px] text-[#808080] font-[400] ml-1">Gray,256gb</h4> */}
-                             </div>
-
-                             <div className="flex flex-row justify-center sm1:justify-start items-center h-[110px] sm1:ml-2 sm1:h-[50px]">
-                             <h2>&#8377; 98,000</h2>
-                             <h2 className="ml-2">&#183; Paid</h2>
-                             </div>
-
-                              {/* show when order is cancelled    */}
-
-                             {/* <div className="flex flex-row justify-center items-center h-[100px] ">
-                             <div className="h-[12px] w-[12px] bg-[#f53d3d] rounded-[50%]">
-                             </div>
-                                <h2 className="ml-2">Order Cancelled </h2>
+                          {data.map((item:ordertype, index:number)=>(
+                            <div key={index} className="min-h-[120px] border w-[980px] sm1:w-[330px]   sm1:flex-col bg-[white] mt-[15px] shadow-lg flex flex-row justify-evenly items-center sm1:items-start sm1:justify-start sm1:h-[350px]"  >
+                            <div className="h-[80px] w-[80px] sm1:h-[120px] sm1:w-[120px] sm1:mt-2 sm1:ml-2">
+                             <img className="min-h-[50%] max-h-[100%] min-w-[50%] max-w-[100%]" src={item.image} alt="" />
+                               </div>
+  
+                               <div className="flex flex-col justify-center items-start  h-[110px] sm1:ml-2 sm1:h-[50px]">
+                               <h2 className=" mt-0 text-[black] ml-1" >{item.totalitems} item</h2>
+                                {/* <h4 className="text-[13px] text-[#808080] font-[400] ml-1">Gray,256gb</h4> */}
+                               </div>
+  
+                               <div className="flex flex-col justify-center items-start  h-[110px] sm1:ml-2 sm1:h-[50px]">
+                               <h2 className=" mt-0 text-[black] ml-1" >{item.paymentmode}</h2>
+                                {/* <h4 className="text-[13px] text-[#808080] font-[400] ml-1">Gray,256gb</h4> */}
+                               </div>
+  
+                               <div className="flex flex-row justify-center sm1:justify-start items-center h-[110px] sm1:ml-2 sm1:h-[50px]">
+                               <h2>&#8377; {item.totalprice}</h2>
+                               <h2 className="ml-2">&#183; {item.paymentstatus}</h2>
+                               </div>
+  
+                                {/* show when order is cancelled    */}
+  
+                               {/* <div className="flex flex-row justify-center items-center h-[100px] ">
+                               <div className="h-[12px] w-[12px] bg-[#f53d3d] rounded-[50%]">
+                               </div>
+                                  <h2 className="ml-2">Order Cancelled </h2>
+                               
+                               </div> */}
+  
+                               <div className="flex flex-row justify-center items-center sm1:justify-start sm1:ml-2 sm1:mb-2">
+                               <div className="h-[12px] w-[12px] bg-[#45ec45] rounded-[50%]">
+                               </div>
+                                  <h2 className="ml-2">{item.orderstatus}</h2>
+                               
+                               </div>
+  
                              
-                             </div> */}
-
-                             <div className="flex flex-row justify-center items-center sm1:justify-start sm1:ml-2 sm1:mb-2">
-                             <div className="h-[12px] w-[12px] bg-[#45ec45] rounded-[50%]">
-                             </div>
-                                <h2 className="ml-2">Order Placed </h2>
-                             
-                             </div>
-
-                           
-
-                          </div>
+  
+                            </div>
+                          ))}
 
 
                          

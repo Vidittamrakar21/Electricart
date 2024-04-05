@@ -9,6 +9,7 @@ type propstype = {
     rmitem: (x: string) => void
     fetchprice: (x: number) => void
     fetchdiscount: (x: number) => void
+    setimg: (x: string) => void
 }
 
 const removecart = gql`
@@ -78,6 +79,7 @@ export default function Cardcart(props:propstype){
         setprice((result.data.getbyid).price)
         props.fetchprice((result.data.getbyid).originalprice)
         props.fetchdiscount(((result.data.getbyid).originalprice) - ((result.data.getbyid).price))
+        props.setimg((result.data.getbyid).image)
        }
     });
     
