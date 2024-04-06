@@ -32,7 +32,16 @@ export default function Navbar (){
   }
 
   const opencart = () => {
-    router.push('/cart')
+    const rfcook = Cookies.get('RF_TOKEN')
+    if(rfcook){
+      router.push('/cart')
+      setbox(false)
+    }
+    else{
+
+      router.push('/sign')
+      setbox(false)
+    }
 
   }
 
