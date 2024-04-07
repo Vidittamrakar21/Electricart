@@ -44,10 +44,9 @@ mutation Mutation($uid: String, $pid: String) {
 
 const confirmorder = gql`
 
-mutation Mutation($uid: String, $pid: [String], $totalprice: Float, $totalitems: Float, $paymentmode: String, $paymentstatus: String, $orderstatus: String, $deliveryaddress: String, $image: String) {
-    createorder(uid: $uid, pid: $pid, totalprice: $totalprice, totalitems: $totalitems, paymentmode: $paymentmode, paymentstatus: $paymentstatus, orderstatus: $orderstatus, deliveryaddress: $deliveryaddress, image: $image)
+mutation Mutation($uid: String, $pid: [String], $totalprice: Float, $totalitems: Float, $paymentmode: String, $paymentstatus: String, $orderstatus: String, $deliveryaddress: String, $image: String, $deldate: Float) {
+    createorder(uid: $uid, pid: $pid, totalprice: $totalprice, totalitems: $totalitems, paymentmode: $paymentmode, paymentstatus: $paymentstatus, orderstatus: $orderstatus, deliveryaddress: $deliveryaddress, image: $image, deldate: $deldate)
   }
-
 `
 
 const emptycart = gql`
@@ -100,6 +99,10 @@ export default function Checkout() {
     const [ cod , iscod] = useState(false)
     const [confirm, setconfirm] = useState(false)
     const [paymentmethod, setpaymethod] = useState("Razorpay")
+
+    let dt = new Date(Date.now())
+    let din = dt.getDate()
+  
 
  
     const showadbox = () =>{
@@ -389,6 +392,7 @@ export default function Checkout() {
     const getimage = (x:string)=>{
         setimg(x)
         console.log("img", x)
+    
     }
 
     const [check , setcheck] = useState(true)
@@ -404,7 +408,8 @@ export default function Checkout() {
         paymentstatus: razorpaystatus,
         orderstatus: "Order Placed",
         deliveryaddress: adr,
-        image: img
+        image: img,
+        deldate: din + 3
         
     }
 
@@ -417,7 +422,8 @@ export default function Checkout() {
         paymentstatus: codstatus,
         orderstatus: "Order Placed",
         deliveryaddress: adr,
-        image: img
+        image: img,
+        deldate: din + 3
         
     }
 
@@ -492,70 +498,78 @@ export default function Checkout() {
 
     const getpay = async () =>{
 
+        if(arr.length>0){
+
+            const res = await loadScript(
+                "https://checkout.razorpay.com/v1/checkout.js"
+            );
     
-
-        const res = await loadScript(
-            "https://checkout.razorpay.com/v1/checkout.js"
-        );
-
-
-        const data = await (await axios.post('https://electricart-order-server.vercel.app/api/payment/checkout', {amt: pricing-discounting})).data;
-        const {order, key} = data;
-        
-        const options = {
-          key: key, 
-          amount: order.amount, 
-          currency: "INR",
-          name: "Electricart",
-          description: "Test Transaction",
-          image: "https://example.com/your_logo",
-          order_id: order.id, 
-          callback_url: `/confirmed/confo?id=${order.id}`,
-          prefill: {
-              name: "Vidit tamrakar",
-              email: "vidit.tamrakar@example.com",
-              contact: "9000090000"
-          },
-          notes: {
-              "address": "Razorpay Corporate Office"
-          },
-          theme: {
-              "color": "#4C3F91"
-          }
-      };
-      //@ts-ignore
-      var rzp1 = new window.Razorpay(options);
-     
-          if(rzp1.open()){
-
-            await gqclient.mutate({
-                mutation: confirmorder,
-                variables: upiorderdata
-
-
-                
-            }).then(async (res)=> {
-                if(res.data.createorder){
-                    await gqclient.mutate({
-                        mutation: emptycart,
-                        variables: {
-                            uid: id
-                        }
-                    }).then((rs)=>{
-
-                        if(rs.data.clearcart === "updated"){
-                            
-                           
-                        }
-                    })
-
-
-                     
-                }
-            })
-
+    
+            const data = await (await axios.post('https://electricart-order-server.vercel.app/api/payment/checkout', {amt: pricing-discounting})).data;
+            const {order, key} = data;
             
-          }
+            const options = {
+              key: key, 
+              amount: order.amount, 
+              currency: "INR",
+              name: "Electricart",
+              description: "Test Transaction",
+              image: "https://example.com/your_logo",
+              order_id: order.id, 
+              callback_url: `/confirmed/confo?id=${order.id}`,
+              prefill: {
+                  name: "Vidit tamrakar",
+                  email: "vidit.tamrakar@example.com",
+                  contact: "9000090000"
+              },
+              notes: {
+                  "address": "Razorpay Corporate Office"
+              },
+              theme: {
+                  "color": "#4C3F91"
+              }
+          };
+          //@ts-ignore
+          var rzp1 = new window.Razorpay(options);
+         
+              if(rzp1.open()){
+    
+                await gqclient.mutate({
+                    mutation: confirmorder,
+                    variables: upiorderdata
+    
+    
+                    
+                }).then(async (res)=> {
+                    if(res.data.createorder){
+                        await gqclient.mutate({
+                            mutation: emptycart,
+                            variables: {
+                                uid: id
+                            }
+                        }).then((rs)=>{
+    
+                            if(rs.data.clearcart === "updated"){
+                                
+                               
+                            }
+                        })
+    
+    
+                         
+                    }
+                })
+    
+                
+              }
+
+              else{
+                alert("Kindly add a Delivery Address !")
+               }
+
+        }
+
+        
   
           
       

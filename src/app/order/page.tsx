@@ -26,6 +26,7 @@ mutation Mutation($uid: String) {
       orderstatus
       deliveryaddress
       image
+      deldate
     }
   }
 `
@@ -41,6 +42,7 @@ type ordertype = {
     orderstatus: string
     deliveryaddress: string
     image: string
+    deldate: number 
 }
 
 
@@ -128,7 +130,18 @@ export default function Order () {
         router.push('/')
     }
 //@ts-ignore
-    const [productdata, setprodata] = useState<ordertype>()
+    const [productdata, setprodata] = useState<ordertype>({
+        _id:"",
+        uid: "",
+        pid: [""],
+        totalprice: 0,
+        totalitems: 0,
+        paymentmode: "",
+        paymentstatus: "",
+        orderstatus: "",
+        deliveryaddress: "",
+        image: "",
+        deldate: 0})
     const [proid, setproid] = useState<string[]>([])
 
     const handlepro = (x:ordertype) =>{
@@ -138,6 +151,9 @@ export default function Order () {
         setproid(x.pid)
 
     }
+
+    let dt = new Date(Date.now())
+    let din = dt.getDate()
 
 
     useEffect(()=>{
@@ -190,7 +206,7 @@ export default function Order () {
   
                                <div className="flex flex-row justify-center sm1:justify-start items-center h-[110px] sm1:ml-2 sm1:h-[50px]">
                                <h2>&#8377; {item.totalprice}</h2>
-                               <h2 className="ml-2">&#183; {item.paymentstatus}</h2>
+                               <h2 className="ml-2">&#183; {item.paymentstatus === "Yet to be paid" && din >= item.deldate ? "Paid" : item.paymentstatus }</h2>
                                </div>
   
                                 {/* show when order is cancelled    */}
@@ -205,7 +221,7 @@ export default function Order () {
                                <div className="flex flex-row justify-center items-center sm1:justify-start sm1:ml-2 sm1:mb-2">
                                <div className="h-[12px] w-[12px] bg-[#45ec45] rounded-[50%]">
                                </div>
-                                  <h2 className="ml-2">{item.orderstatus}</h2>
+                                  <h2 className="ml-2">{din >= item.deldate ?"Delivered": item.orderstatus}</h2>
                                
                                </div>
   
@@ -240,13 +256,14 @@ export default function Order () {
 
                               <div className="flex flex-row justify-center sm1:justify-start items-center h-[40px] sm1:ml-2 ml-4">
                               <h2>&#8377; {productdata?.totalprice}</h2>
-                              <h2 className="ml-2">&#183; {productdata?.paymentstatus}</h2>
+                              <h2 className="ml-2">&#183; {productdata?.paymentstatus === "Yet to be paid" && din >= productdata?.deldate ? "Paid" : productdata?.paymentstatus }</h2>
                               </div>
 
                               <div className="flex flex-row justify-center items-center sm1:justify-start sm1:ml-2 ml-4">
                               <div className="h-[12px] w-[12px] bg-[#45ec45] rounded-[50%]">
                               </div>
-                                 <h2 className="ml-2">{productdata?.orderstatus}</h2>
+
+                                 <h2 className="ml-2">{din >= productdata?.deldate  ? "Delivered": productdata?.orderstatus}</h2>
                              
                               </div>
 
@@ -264,7 +281,7 @@ export default function Order () {
     
                         {proid.map((item: string, index:number)=>(
 
-                            <Ordercard id={item} key={index}></Ordercard>
+                            <Ordercard id={item} key={index} dte = {productdata?.deldate}></Ordercard>
 
                         ))}
 

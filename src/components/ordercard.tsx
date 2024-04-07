@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef } from "react";
 import { gql } from "@apollo/client";
 import { client } from "@/app/client";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { gqclient } from "@/app/sign/page";
 
 type propstype = {
     id: string
+    dte: number
   
    
 }
+
 
 const removecart = gql`
 
@@ -20,13 +23,22 @@ mutation Mutation($uid: String, $pid: String) {
 
 `
 
+const makereview = gql`
+
+mutation Mutation($pid: String, $rate: Float, $review: String) {
+    rateproduct(pid: $pid, rate: $rate, review: $review)
+  }
+
+`
+
 export default function Ordercard(props:propstype){
 
     const id = Cookies.get('uid');
   
     const router  = useRouter()
     
-    
+    let dt = new Date(Date.now())
+    let din = dt.getDate()
 
     interface producttype {
         title: string,
@@ -107,6 +119,8 @@ export default function Ordercard(props:propstype){
     const [star3 , setstar3] = useState<boolean>(false);
     const [star4 , setstar4] = useState<boolean>(false);
     const [star5 , setstar5] = useState<boolean>(false);
+    const [rating , setrating] = useState(0)
+    const rev = useRef<HTMLTextAreaElement>(null)
 
     const openmodal = () => {
         setbox(true)
@@ -122,6 +136,7 @@ export default function Ordercard(props:propstype){
         setstar3(false)
         setstar4(false)
         setstar5(false)
+        setrating(1)
     }
     const handlestar2 = () => {
         setstar1(true)
@@ -129,6 +144,7 @@ export default function Ordercard(props:propstype){
         setstar3(false)
         setstar4(false)
         setstar5(false)
+        setrating(2)
     }
     const handlestar3 = () => {
         setstar1(true)
@@ -136,6 +152,7 @@ export default function Ordercard(props:propstype){
         setstar3(true)
         setstar4(false)
         setstar5(false)
+        setrating(3)
     }
     const handlestar4 = () => {
         setstar1(true)
@@ -143,6 +160,7 @@ export default function Ordercard(props:propstype){
         setstar3(true)
         setstar4(true)
         setstar5(false)
+        setrating(4)
         
     }
     const handlestar5 = () => {
@@ -151,6 +169,31 @@ export default function Ordercard(props:propstype){
         setstar3(true)
         setstar4(true)
         setstar5(true)
+        setrating(5)
+    }
+
+
+    const handlerating = async()=>{
+        if(rev.current?.value !== "" && rating !== 0){
+
+            client.mutate({
+                mutation: makereview,
+                variables: {
+                    pid: props.id,
+                    rate: rating,
+                    review: rev.current?.value
+                }
+            }).then((res)=> {
+                if(res.data.rateproduct === "updated"){
+                    setbox(false)
+                }
+            })
+
+        }
+        else{
+            setbox(false)
+        }
+
     }
 
 
@@ -191,7 +234,7 @@ export default function Ordercard(props:propstype){
 
                               <div onClick={openmodal} className="flex flex-row justify-center items-center h-[110px] sm1:justify-start sm1:ml-2 sm1:h-[50px]">
                               {/* <h2 className="text-[#0066ff]">Cancel Order</h2> */}
-                             <h2 className="text-[#0066ff]"> &#9733;Rate and Review</h2>
+                             <h2 className={din >= props.dte ?"text-[#0066ff]" : "hidden"}> &#9733;Rate and Review</h2>
                           
                                </div>
 
@@ -215,8 +258,8 @@ export default function Ordercard(props:propstype){
                                         <div className={star5 === true ? "text-[#ffd13c]":""} onClick={handlestar5}>&#9733;</div>
                                 </div>
                                 <h1 className="text-[18px] text-[black] font-[500] mt-5 ml-4">Review This Product</h1>
-                                <textarea className=" sm1:w-[320px] mt-5 ml-5 sm1:ml-2 resize-none border border-[#a8a8a8] rounded-[8px]" placeholder="&nbsp; &nbsp; Description (Optional)"  cols={33} rows={10}></textarea>
-                                <button className="h-[40px] relative left-[100px] sm1:left-[70px] top-4 w-[190px] bg-[#FB641B] text-[white] text-[17px]">Submit</button>
+                                <textarea ref={rev} className=" sm1:w-[320px] mt-5 ml-5 sm1:ml-2 resize-none border border-[#a8a8a8] rounded-[8px]" placeholder="&nbsp; &nbsp; Description (Optional)"  cols={33} rows={10}></textarea>
+                                <button onClick={handlerating} className="h-[40px] relative left-[100px] sm1:left-[70px] top-4 w-[190px] bg-[#FB641B] text-[white] text-[17px]">Submit</button>
                     </div>
 
                     {/* cancel order modal */}
