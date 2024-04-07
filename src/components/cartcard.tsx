@@ -9,7 +9,7 @@ type propstype = {
     rmitem: (x: string) => void
     fetchprice: (x: number) => void
     fetchdiscount: (x: number) => void
-    setimg: (x: string) => void
+    setimg: (x: string , y:string) => void
 }
 
 const removecart = gql`
@@ -26,7 +26,82 @@ export default function Cardcart(props:propstype){
 
     const id = Cookies.get('uid');
   
+    const fulldate = new Date(Date.now());
+    const date = fulldate.getDate();
+    const day = fulldate.getDay();
+    const month = fulldate.getMonth();
+    console.log("date", day ,date , month)
 
+   
+
+    const getday = (x:number) => {
+        if(x=== 0 || x=== 7){
+            return "Sunday"
+        }
+        else if(x=== 1|| x=== 8){
+            return "Monday"
+        }
+        else if(x=== 2|| x=== 9){
+            return "Tuesday"
+        }
+        else if(x=== 3|| x=== 10){
+            return "Wednesday"
+        }
+        else if(x=== 4|| x=== 11){
+            return "Thursday"
+        }
+        else if(x=== 5|| x=== 12){
+            return "Friday"
+        }
+        else if(x=== 6|| x=== 13){
+            return "Saturday"
+        }
+    }
+
+    const getmonth  = (x:number)=>{
+        if(x === 0){
+            return "January"
+        }
+        else if(x === 1){
+            return "February"
+        }
+        else if(x === 2){
+            return "March"
+        }
+        else if(x === 3){
+            return "April"
+        }
+        else if(x === 4){
+            return "May"
+        }
+        else if(x === 5){
+            return "June"
+        }
+        else if(x === 6){
+            return "July"
+        }
+        else if(x === 7){
+            return "August"
+        }
+        else if(x === 8){
+            return "September"
+        }
+        else if(x === 9){
+            return "October"
+        }
+        else if(x === 10){
+            return "November"
+        }
+        else if(x === 11){
+            return "December"
+        }
+    }
+
+    const getdeliverydate = (x:number, y:number, z:number) => {
+        const day = getday(x)
+        const month = getmonth(y)
+        return `Delivered by ${z} ${month},${day}`
+    }
     
     
 
@@ -79,7 +154,7 @@ export default function Cardcart(props:propstype){
         setprice((result.data.getbyid).price)
         props.fetchprice((result.data.getbyid).originalprice)
         props.fetchdiscount(((result.data.getbyid).originalprice) - ((result.data.getbyid).price))
-        props.setimg((result.data.getbyid).image)
+        props.setimg((result.data.getbyid).image , getdeliverydate(day+5,month,date+5))
        }
     });
     
@@ -171,7 +246,7 @@ export default function Cardcart(props:propstype){
                      <div className="h-[150px] w-[600px] flex flex-col justify-center items-start ml-4 sm1:w-[200px] sm1:h-[100]">
                         <div className="flex flex-row justify-center items-center"> 
                          <h2 className="sm1:text-[13px]">{truncateTitle(data?.title, 5)}</h2>
-                        <h2 className="text-[14px] ml-5 sm1:text-[12px]">Delivery by Monday Feb 19</h2>
+                        <h2 className="text-[14px] ml-5 sm1:text-[12px]">{getdeliverydate(day+5,month,date+5)}</h2>
                         </div>
 
                         <h3 className="text-[14px] text-[gray] sm1:text-[12px]">Seller: {data?.seller}</h3>

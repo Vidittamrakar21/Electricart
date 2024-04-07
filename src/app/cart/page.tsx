@@ -172,7 +172,7 @@ export default function Cart() {
        }
     }
 
-    const getimage = (x:string)=>{
+    const getimage = (x:string , y:string)=>{
        return
     }
 

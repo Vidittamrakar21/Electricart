@@ -303,9 +303,11 @@ export default function Checkout() {
     const [discount , setdiscount ] = useState<number[]>([]);
     const [worked1 , isworking1] = useState(false)
     const [worked2 , isworking2] = useState(false)
+    const [date, setdate] = useState("")
     const settingprice = (x: number) => {
         
            if(!worked1){
+            
             const index  = itemprice.indexOf(x);
             if(index === -1 && x !== undefined){
 
@@ -389,10 +391,19 @@ export default function Checkout() {
 
     const [img, setimg] = useState("")
 
-    const getimage = (x:string)=>{
+    const getimage = (x:string , y:string)=>{
         setimg(x)
+        setdate (y)
         console.log("img", x)
     
+    }
+
+
+    const sendnotification = async (x: string)=>{
+        const data  = await (await axios.post('https://electricart-product-server.vercel.app/api/notify', {uid: id , msg: {oid: x, not: `Your Order is Confirmed and will be ${date}`}})).data;
+        if(data){
+            return
+        }
     }
 
     const [check , setcheck] = useState(true)
@@ -450,8 +461,8 @@ export default function Checkout() {
                         variables: {
                             uid: id
                         }
-                    }).then((rs)=>{
-
+                    }).then(async (rs)=>{
+                        await sendnotification(res.data.createorder)
                         if(rs.data.clearcart === "updated"){
                             //@ts-ignore
                              Cookies.set('cart', 0 )
@@ -542,6 +553,7 @@ export default function Checkout() {
                     
                 }).then(async (res)=> {
                     if(res.data.createorder){
+                        await sendnotification(res.data.createorder)
                         await gqclient.mutate({
                             mutation: emptycart,
                             variables: {
@@ -563,12 +575,11 @@ export default function Checkout() {
                 
               }
 
-              else{
-                alert("Kindly add a Delivery Address !")
-               }
-
         }
 
+        else{
+            alert("Kindly add a Delivery Address !")
+           }
         
   
           
