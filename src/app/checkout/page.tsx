@@ -271,7 +271,6 @@ export default function Checkout() {
                 }
 
                
-                console.log("fetch worked")
             })
         }
         
@@ -292,7 +291,7 @@ export default function Checkout() {
                     setdata([])
                     fetchcart(0)
                   
-                    console.log(x)
+              
                 }
             })
         }
@@ -313,7 +312,7 @@ export default function Checkout() {
 
                 itemprice.push(x)
                 setprice(itemprice)
-                console.log(itemprice)
+      
                 isworking1(true)
                 if(data.length === itemprice.length){
                     findallamount()
@@ -331,7 +330,7 @@ export default function Checkout() {
 
                 discount.push(x)
                 setdiscount(discount)
-                console.log(discount)
+           
                 isworking2(true)
                 if(data.length === discount.length){
                     findalldiscount()
@@ -368,7 +367,7 @@ export default function Checkout() {
     function ty (){
      if(arr.length>0){
         const i = arr.length -1
-        console.log("radioo")
+     
         isradio(i)
      }
     }
@@ -394,7 +393,7 @@ export default function Checkout() {
     const getimage = (x:string , y:string)=>{
         setimg(x)
         setdate (y)
-        console.log("img", x)
+       
     
     }
 

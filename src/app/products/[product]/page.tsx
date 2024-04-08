@@ -116,13 +116,13 @@ export default function Product () {
         }
     }
     `
-    }).then((result)=>{console.log(result); setdata(result.data.getbyid)});
+    }).then((result)=>{ setdata(result.data.getbyid)});
 
     const fulldate = new Date(Date.now());
     const date = fulldate.getDate();
     const day = fulldate.getDay();
     const month = fulldate.getMonth();
-    console.log("date", day ,date , month)
+ 
 
    
 

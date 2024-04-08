@@ -10,9 +10,9 @@ import Cookies from 'js-cookie'
 export default function Navbar (){
   const data  =  useContext(EcoContext);
   const router = useRouter()
+  const rfcook = Cookies.get('RF_TOKEN')
 
   const opensign = ()=>{
-    const rfcook = Cookies.get('RF_TOKEN')
     if(rfcook){
       setbox(!box)
     }
@@ -115,7 +115,6 @@ const [num, setnum] = useState(0)
       const name = Cookies.get('name')
       setudata(name)
 
-    console.log("working")
     
   })
 
@@ -135,9 +134,14 @@ const [num, setnum] = useState(0)
          <input type="search" placeholder="&nbsp; Search for products brand and more" className=" h-9 w-96 bg-[#CDF5FD] placeholder:text-grey rounded-lg sm1:hidden" onClick={opensearch} />
 
            <div className=" flex flex-row items-start justify-center cursor-pointer sm1:mr-2" onClick={opensign}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="black" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" className={!udata? "flex": "hidden"} fill="black" viewBox="0 0 16 16">
             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
             </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="black" className={udata? "flex": "hidden"}  viewBox="0 0 16 16">
+           <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+           <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+           </svg>
             <h2 className="font-sans ml-3 sm1:hidden">{udata?udata: "Login" }</h2>
             </div>
 
@@ -160,6 +164,11 @@ const [num, setnum] = useState(0)
           </div>
 
             <div  className={box? "h-[150px] w-[180px] sm1:right-[20px] bg-[white] select-none flex flex-col justify-center items-center fixed right-[500px] top-[60px] shadow-lg rounded-[8px] border" :"hidden"}>
+                <div className={udata?"hidden sm1:h-[45px] sm1:w-[180px] sm1:flex sm1:justify-start sm1:items-center  sm1:cursor-pointer sm1:border-b sm1:border-b-[#c0c0c0bb]": "hidden"}>
+               
+                    <h2 className=" ml-4">{udata}</h2>
+                </div>
+
                 <div onClick={openorder} className="h-[45px] w-[170px] flex justify-start items-center ml-3 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray"  viewBox="0 0 16 16">
                <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z"/>

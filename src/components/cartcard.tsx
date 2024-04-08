@@ -30,7 +30,7 @@ export default function Cardcart(props:propstype){
     const date = fulldate.getDate();
     const day = fulldate.getDay();
     const month = fulldate.getMonth();
-    console.log("date", day ,date , month)
+   
 
    
 

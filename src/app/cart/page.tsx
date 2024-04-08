@@ -69,8 +69,7 @@ export default function Cart() {
                     isloading(true)
                 }
 
-               
-                console.log("fetch worked")
+             
             })
         }
         
@@ -122,7 +121,7 @@ export default function Cart() {
 
                 itemprice.push(x)
                 setprice(itemprice)
-                console.log(itemprice)
+              
                 isworking1(true)
                 if(itemprice.length >= data.length){
                     findallamount()
@@ -140,7 +139,7 @@ export default function Cart() {
 
                 discount.push(x)
                 setdiscount(discount)
-                console.log(discount)
+              
                 isworking2(true)
                 if(data.length === discount.length){
                     findalldiscount()

@@ -36,7 +36,6 @@ export default function Search (){
         router.push('/')
     }
 
-    console.log(key)
 
     const [data, setdata] = useState([])
     const [arr2, setarr2] = useState([])

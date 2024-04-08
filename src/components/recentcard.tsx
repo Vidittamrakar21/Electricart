@@ -1,6 +1,6 @@
 import {useRouter} from 'next/navigation'
 import { client } from '@/app/client';
-import { useState } from 'react';
+import { useState ,useEffect } from 'react';
 import { gql } from '@apollo/client';
 import Recentskeleton from './recentskeleton';
 
@@ -26,32 +26,37 @@ export default function Recentcard (props: propstype){
 
     
     const [data, setdata] = useState<producttype>()
+    const [fetched, setfetch] = useState<boolean>(false)
 
-    client.query({
-        query: gql`
-    {
-        
-        getbyid(id:"${props.id}"){
-            title
-            spec
-            originalprice
-            price
-            category
-            brand
-            delivery
-            seller
-            description
-            rating
-            reviews {
-              rate
-              review
+   const fetchdata = async ()=>{
+    if(!fetched){
+        await client.query({
+            query: gql`
+        {
+            
+            getbyid(id:"${props.id}"){
+                title
+                spec
+                originalprice
+                price
+                category
+                brand
+                delivery
+                seller
+                description
+                rating
+                reviews {
+                  rate
+                  review
+                }
+                image
             }
-            image
         }
+        `
+        }).then((result)=>{ setdata(result.data.getbyid); setfetch(true)});
+        
     }
-    `
-    }).then((result)=>{console.log(result); setdata(result.data.getbyid)});
-
+   }
     const router = useRouter()
 
     const handleclick = () => {
@@ -69,6 +74,10 @@ export default function Recentcard (props: propstype){
           }
       }
       };
+
+      useEffect(()=>{
+        fetchdata()
+      })
 
       //@ts-ignore
       if(!data){

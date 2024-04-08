@@ -41,7 +41,7 @@ export default function Front (){
     
     const [udata, setudata] = useState<usertok>()
       const validateuser = async ()=> {
-        console.log("inside func")
+        
         const cook = Cookies.get('RF_TOKEN')
         const accook = Cookies.get('AC_TOKEN')
         if(cook && accook){

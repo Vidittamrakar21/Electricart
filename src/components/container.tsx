@@ -7,6 +7,7 @@ import { query } from "firebase/database"
 
 
 
+
 type productype = {
     item : string
     price: string
@@ -18,18 +19,30 @@ export default function Container () {
     const [listdata, setdata] = useState([]);
     const [load , setload] = useState(false);
 
-    client.query({
-        query: gql`
-    {
-        getlistitem{
-            item 
-            price 
-            image
-        }
-    }
-    `
-    }).then((result)=>{setdata(result.data.getlistitem)});
+    
 
+    const [fetched, setfetch] = useState<boolean>(false)
+
+   const fetchdata = async ()=>{
+    if(!fetched){
+        client.query({
+            query: gql`
+        {
+            getlistitem{
+                item 
+                price 
+                image
+            }
+        }
+        `
+        }).then((result)=>{setdata(result.data.getlistitem); setfetch(true);});
+        
+    }
+   }
+
+   useEffect(()=>{
+    fetchdata()
+   })
 
 
     if(listdata.length=== 0){
