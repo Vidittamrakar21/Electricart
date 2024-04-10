@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Electricart- A full-stack eCommerce web application of electronic products.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Core Features and Functionality:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-Custom-built APIs for all the products, ensuring flexibility and performance
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-Search functionality to quickly find desired products
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+-Filter options by price range, brand, and ratings for tailored shopping experiences
 
-## Learn More
+-Seamless cart functionality for smooth transactions
 
-To learn more about Next.js, take a look at the following resources:
+-Product rating system to guide purchasing decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-Notification system to keep users informed about order status and updates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+-Tracking of recently viewed products for personalized recommendations
 
-## Deploy on Vercel
+-Updates the order status of a product after getting delivered 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Authentication and Payment Integration:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+-Firebase authentication with Google provider for secure user authentication
+
+-Integration of Razorpay payment gateway in test mode for streamlined payment processing.
+
+## Tech Stack Used- 
+
+For Frontend:
+
+I've Used Next.js for creating its frontend.
+
+Tailwind CSS for sleek and responsive UI design
+
+Took reference from Flipkart for UI design
+
+
+For Backend:
+
+I've used Node.js and Express.js for robust server-side logic
+TypeScript for type-safe development
+
+GraphQL for efficient data querying and manipulation.
+
