@@ -3,8 +3,6 @@ import Card from "./cards"
 import Cardskeleton from "./cardskeleton"
 import { gql, useQuery } from "@apollo/client"
 import { client } from "../app/client"
-import { query } from "firebase/database"
-
 
 
 
